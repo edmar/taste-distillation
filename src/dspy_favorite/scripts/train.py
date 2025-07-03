@@ -1,0 +1,247 @@
+#!/usr/bin/env python3
+"""
+Training script for DSPy favorite classifier
+"""
+
+import os
+import sys
+import json
+import pandas as pd
+import dspy
+from datetime import datetime
+
+# Disable DSPy caching to avoid database conflicts in parallel training
+os.environ['DSPY_CACHEDIR'] = '/tmp/dspy_cache_disable'
+
+# Add parent directory to path to import dspy_favorite
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from dspy_favorite import TastePredictionModule
+
+def accuracy_metric(example, pred, trace=None):
+    """Simple accuracy metric for DSPy training"""
+    return example.is_favorite == pred.is_favorite
+
+def train_model(
+    data_path: str = "data/processed/dspy_favorite",
+    model_name: str = "openai/gpt-4o",
+    optimizer_type: str = "mipro",
+    max_train_examples: int = None,
+    max_bootstrapped_demos: int = 4,
+    max_labeled_demos: int = 4,
+    num_threads: int = 16,
+    auto_level: str = "light",
+    save_path: str = "saved/models/dspy_favorite"
+):
+    """Train the DSPy favorite classifier"""
+    
+    print("="*50)
+    print("DSPy FAVORITE CLASSIFIER TRAINING")
+    print("="*50)
+    print(f"Model: {model_name} | Optimizer: {optimizer_type} | Examples: {max_train_examples or 'all'}")
+    
+    # Load training data
+    train_path = f"{data_path}/train/dspy_examples.json"
+    val_path = f"{data_path}/val/dspy_examples.json"
+    
+    if not os.path.exists(train_path):
+        print(f"❌ Training data not found at: {train_path}")
+        print("Please run prepare.py first to create training data")
+        return False
+    
+    # Load training examples
+    with open(train_path, 'r') as f:
+        train_data = json.load(f)
+    
+    # Load validation examples if available
+    val_data = []
+    if os.path.exists(val_path):
+        with open(val_path, 'r') as f:
+            val_data = json.load(f)
+    
+    # Convert to DSPy Examples
+    trainset = []
+    subset = train_data if max_train_examples is None else train_data[:max_train_examples]
+    for item in subset:
+        example = dspy.Example(
+            title=item['title'],
+            is_favorite=item['is_favorite']
+        ).with_inputs('title')
+        trainset.append(example)
+    
+    valset = []
+    for item in val_data:
+        example = dspy.Example(
+            title=item['title'],
+            is_favorite=item['is_favorite']
+        ).with_inputs('title')
+        valset.append(example)
+    
+    # Show training statistics
+    favorites = [ex for ex in trainset if ex.is_favorite]
+    non_favorites = [ex for ex in trainset if not ex.is_favorite]
+    
+    print(f"Training examples: {len(trainset)} ({len(favorites)} favorites, {len(non_favorites)} non-favorites)")
+    
+    # Load rubric if available
+    rubric_path = "saved/rubrics/personal_taste_rubric.txt"
+    rubric = None
+    if os.path.exists(rubric_path):
+        with open(rubric_path, 'r') as f:
+            rubric = f.read()
+        print("✅ Loaded taste rubric")
+    
+    # Configure DSPy with cache disabled
+    dspy.configure(lm=dspy.LM(model_name, cache=False), cache=False)
+    
+    # Initialize module
+    print(f"\n🔧 Initializing module...")
+    module = TastePredictionModule(use_reasoning=True, rubric=rubric)
+    
+    # Set up optimizer
+    print(f"\n🎯 Setting up {optimizer_type} optimizer...")
+    
+    if optimizer_type.lower() == "mipro":
+        teleprompter = dspy.MIPROv2(
+            metric=accuracy_metric,
+            auto=auto_level,
+            num_threads=num_threads
+        )
+        compile_kwargs = {
+            "max_bootstrapped_demos": max_bootstrapped_demos,
+            "max_labeled_demos": max_labeled_demos,
+            "requires_permission_to_run": False
+        }
+    elif optimizer_type.lower() == "bootstrap":
+        teleprompter = dspy.BootstrapFewShot(
+            metric=accuracy_metric,
+            max_bootstrapped_demos=max_bootstrapped_demos,
+            max_labeled_demos=max_labeled_demos,
+            max_rounds=1,
+            max_errors=10
+        )
+        compile_kwargs = {
+            "requires_permission_to_run": False
+        }
+    else:
+        print(f"❌ Unknown optimizer type: {optimizer_type}")
+        return False
+    
+    # Optimize the model
+    print(f"\n🚀 Starting optimization...")
+    optimized_module = teleprompter.compile(
+        module,
+        trainset=trainset,
+        **compile_kwargs
+    )
+    
+    print("✅ Optimization completed successfully!")
+    
+    # Save the optimized model
+    print(f"\n💾 Saving model...")
+    os.makedirs(os.path.dirname(save_path), exist_ok=True)
+    
+    # Find next available model number
+    base_path = save_path
+    counter = 1
+    while os.path.exists(f"{base_path}_{counter:03d}.json"):
+        counter += 1
+    numbered_path = f"{base_path}_{counter:03d}"
+    
+    # Save DSPy model
+    optimized_module.save(f"{numbered_path}.json")
+    print(f"✅ Model saved to: {numbered_path}.json")
+    
+    # Save training metadata
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    metadata = {
+        'timestamp': timestamp,
+        'model_name': model_name,
+        'optimizer_type': optimizer_type,
+        'training_examples': len(trainset),
+        'favorite_examples': len(favorites),
+        'non_favorite_examples': len(non_favorites),
+        'max_train_examples': max_train_examples,
+        'max_bootstrapped_demos': max_bootstrapped_demos,
+        'max_labeled_demos': max_labeled_demos,
+        'num_threads': num_threads,
+        'auto_level': auto_level,
+        'has_rubric': rubric is not None,
+        'rubric': rubric,
+        'save_path': numbered_path
+    }
+    
+    metadata_path = f"{numbered_path}_metadata.json"
+    with open(metadata_path, 'w') as f:
+        json.dump(metadata, f, indent=2)
+    print(f"✅ Metadata saved to: {metadata_path}")
+    
+    print(f"\n✅ Training completed! Model saved to: {numbered_path}.json")
+    
+    return True
+
+if __name__ == "__main__":
+    # Check for help flag
+    if '--help' in sys.argv or '-h' in sys.argv:
+        print("""
+DSPy Favorite Classifier Training Script
+
+Usage: python train.py [OPTIONS]
+
+Options:
+  <number>           Maximum training examples to use (default: all)
+  mipro, bootstrap   Optimizer type (default: mipro)
+  light, medium, heavy  Auto optimization level for MIPROv2 (default: light)
+  --threads=N        Number of parallel threads (default: 16)
+  --model=MODEL      Language model to use (default: openai/gpt-4o)
+  -h, --help         Show this help message
+
+Examples:
+  python train.py                    # Train with all examples using MIPROv2
+  python train.py 500               # Train with 500 examples
+  python train.py bootstrap         # Use bootstrap optimizer
+  python train.py 1000 mipro heavy  # 1000 examples, MIPROv2, heavy optimization
+  python train.py --threads=8       # Use 8 parallel threads
+  python train.py --model=openai/gpt-4o-mini  # Use different model
+        """)
+        sys.exit(0)
+    
+    # Default parameters
+    data_path = "data/processed/dspy_favorite"
+    model_name = "openai/gpt-4o"
+    optimizer_type = "mipro"
+    max_train_examples = None  # Default to all training examples
+    max_bootstrapped_demos = 4
+    max_labeled_demos = 4
+    num_threads = 16
+    auto_level = "light"
+    
+    # Parse command line arguments
+    for arg in sys.argv[1:]:
+        if arg.lower() in ['mipro', 'bootstrap']:
+            optimizer_type = arg.lower()
+        elif arg.lower() in ['light', 'medium', 'heavy']:
+            auto_level = arg.lower()
+        elif arg.startswith('--threads='):
+            num_threads = int(arg.split('=')[1])
+        elif arg.startswith('--model='):
+            model_name = arg.split('=')[1]
+        else:
+            try:
+                max_train_examples = int(arg)
+            except ValueError:
+                print(f"Warning: Ignoring unrecognized argument: {arg}")
+    
+    # Run training
+    success = train_model(
+        data_path=data_path,
+        model_name=model_name,
+        optimizer_type=optimizer_type,
+        max_train_examples=max_train_examples,
+        max_bootstrapped_demos=max_bootstrapped_demos,
+        max_labeled_demos=max_labeled_demos,
+        num_threads=num_threads,
+        auto_level=auto_level
+    )
+    
+    if not success:
+        sys.exit(1)

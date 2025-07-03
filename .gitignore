@@ -10,6 +10,8 @@ __pycache__/
 *.pyw
 *.pyz
 
+
+
 # data
 data/
 
@@ -18,3 +20,8 @@ data/
 .issues
 .claude
 .vscode
+
+
+Plan.md
+
+

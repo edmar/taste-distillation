@@ -1,0 +1,53 @@
+{
+  "predict_favorite.predict": {
+    "traces": [],
+    "train": [],
+    "demos": [
+      {
+        "augmented": true,
+        "title": "What to write about on your startup’s blog",
+        "reasoning": "The title \"What to write about on your startup’s blog\" suggests content that is likely to provide practical advice and actionable insights for entrepreneurs and startup owners. This aligns with the rubric's preference for articles related to professional growth and entrepreneurship. The article is expected to offer guidance on content strategy, which is crucial for startups looking to establish an online presence and engage with their audience. Additionally, the title implies a how-to or guide format, which is favored for its actionability and relevance to professional goals.",
+        "is_favorite": true
+      },
+      {
+        "augmented": true,
+        "title": "How to Get 247% More People to Read Your Content",
+        "reasoning": "The title \"How to Get 247% More People to Read Your Content\" suggests a practical guide with actionable advice, which aligns with the preference for practical guides and how-tos. It promises a significant improvement in content engagement, which is relevant to personal and professional goals, especially for those involved in content creation or marketing. The specific percentage implies a data-driven approach, which may indicate that the article is informative and research-backed. These elements make it likely to be favored.",
+        "is_favorite": true
+      },
+      {
+        "title": "Walking Venice",
+        "is_favorite": false
+      },
+      {
+        "title": "Reflections on Foundation Models",
+        "is_favorite": false
+      }
+    ],
+    "signature": {
+      "instructions": "Analyze the given article title to predict if it will be marked as a favorite by evaluating its alignment with user preferences using the detailed taste rubric. Provide reasoning for your prediction, considering common themes, content patterns, style preferences, and decision criteria outlined in the rubric.",
+      "fields": [
+        {
+          "prefix": "Title:",
+          "description": "${title}"
+        },
+        {
+          "prefix": "Reasoning:",
+          "description": "${reasoning}"
+        },
+        {
+          "prefix": "Is Favorite:",
+          "description": "${is_favorite}"
+        }
+      ]
+    },
+    "lm": null
+  },
+  "metadata": {
+    "dependency_versions": {
+      "python": "3.12",
+      "dspy": "2.6.27",
+      "cloudpickle": "3.1"
+    }
+  }
+}

@@ -1,0 +1,119 @@
+TASTE RUBRIC:
+
+---
+
+### 1. Common Themes
+
+**A. Self-Improvement & Productivity**
+- Articles about learning, improving habits, setting goals, and productivity frameworks.
+  - E.g., “HOWTO: Be more productive”, “Goal-Setting Doesn’t Work. Here’s What Does.”, “Don't End The Week With Nothing”, “First Action: A Smarter Alternative to GTD-Next Action for the Creatives”.
+
+**B. Knowledge Management & Learning**
+- Interest in methods, tools, and philosophies for acquiring, retaining, and organizing knowledge.
+  - E.g., “Use a Short Knowledge Cycle to Keep Your Cool”, “The Leitner Box—How to Remember Anything Forever”, “Janki Method — Using SRS to Improve Programming”, “Benefits of a daily diary and topic journals”.
+
+**C. Writing & Communication**
+- Strong preference for advice on writing, creative output, and effective communication.
+  - E.g., “Nonfiction Writing Advice”, “Selfish Writing”, “My morning writing practice”, “Write something”, “How to teach technical concepts with cartoons”, “Blog about what you’ve struggled with”.
+
+**D. Technology, AI, & Startups**
+- Engagement with trends, philosophy, and practicalities of technology and startups.
+  - E.g., “Meritech Capital / 2021 Review: SaaS IPOs”, “Machine Learning: The Great Stagnation”, “The Purpose of Technology”, “How Superhuman Built an Engine to Find Product/Market Fit”, “Do Things that Don’t Scale”.
+
+**E. Psychology & Decision-Making**
+- Fascination with the motivations, emotions, and cognitive strategies behind action and inaction.
+  - E.g., “Good and Bad Procrastination”, “Understanding the emotions behind procrastination”, “Why We Want What Other People Have”, “Mental Models: The Best Way to Make Intelligent Decisions”.
+
+**F. Networking & Social Dynamics**
+- Interest in practical, unconventional approaches to networking and relationships.
+  - E.g., “Why You Need to Take 50 Coffee Meetings”, “Instagram DM: Direct Messaging to Network”, “How to make friends over the internet”.
+
+**G. Meta-Reflection & Contrarianism**
+- Drawn to self-referential, meta-level, or contrarian ideas.
+  - E.g., “Intellectual Hipsters and Meta-Contrarianism”, “The idea maze”, “The Wrong Side of Right”.
+
+---
+
+### 2. Content Patterns
+
+**A. Practical & Actionable**
+- Clear, implementable advice or strategies are favored.
+  - “How to Land Great Podcast Guests (With Email Scripts)”, “The Power of Ten Playbook”, “How To Sell”.
+
+**B. Analytical & Conceptual**
+- Enjoys frameworks, models, and deep dives into how things work.
+  - “Mental Models: The Best Way to Make Intelligent Decisions”, “The Purpose of Technology”, “Codus Operandi”.
+
+**C. Reflective & Philosophical**
+- Seeks articles that encourage introspection and questioning norms.
+  - “What Should You Do with Your Life? Directions and Advice”, “Write something”, “We're All Chasing One Another's Goals”.
+
+**D. Personal Experience & Anecdotal**
+- Values stories, personal struggles, and lessons learned.
+  - “Blog about what you’ve struggled with”, “Do things, write about it”, “My morning writing practice”.
+
+---
+
+### 3. Style Preferences
+
+**A. Clear & Direct**
+- Prefers writing that’s straightforward, avoids jargon unless it’s explained, and gets to the point.
+
+**B. Structured & List-Based**
+- Enjoys frameworks, numbered lists, “how-to”s, playbooks, and bullet points that make information easily digestible.
+
+**C. Engaging & Conversational**
+- Favors a personable, sometimes informal tone, often with humor or vulnerability.
+
+**D. Meta & Self-Referential**
+- Likes writing that acknowledges its own process, limitations, or context.
+
+**E. Concise but Deep**
+- Prefers depth over length; appreciates when complex ideas are distilled efficiently.
+
+---
+
+### 4. Decision Criteria: What Makes Content Interesting
+
+**A. Offers Practical Takeaways**
+- Provides actionable advice, scripts, or techniques the reader can use or experiment with.
+
+**B. Teaches How to Think or Learn**
+- Helps the reader upgrade their thinking, frameworks, or learning processes.
+
+**C. Explores Under-Discussed or Contrarian Ideas**
+- Challenges conventional wisdom, questions defaults, or presents fresh angles.
+
+**D. Shares Authentic Personal Experience**
+- Authors who share their own struggles, failures, or personal hacks are favored.
+
+**E. Connects Macro Trends to Personal Action**
+- Bridges big-picture trends (tech, AI, startups) to individual decisions or habits.
+
+**F. Balances Inspiration with Realism**
+- Motivational, but grounded with practical steps and honest acknowledgment of challenges.
+
+**G. Encourages Experimentation and Iteration**
+- Promotes trying, failing, tweaking—rather than perfection or rigid adherence to dogma.
+
+---
+
+**Examples of high-fit articles:**
+- “First Action: A Smarter Alternative to GTD-Next Action for the Creatives” (actionable, meta, practical)
+- “How to Write a Book – Without Even Trying (so hard) • Zettelkasten Method” (knowledge management, practical, writing-focused)
+- “Do Things that Don’t Scale” (contrarian, pragmatic, startup advice)
+- “Selfish Writing” (meta, personal experience, writing advice)
+- “Mental Models: The Best Way to Make Intelligent Decisions” (frameworks, deep thinking, practical)
+
+---
+
+**Articles less likely to fit:**
+- Purely inspirational or motivational pieces without practical advice.
+- Highly technical deep-dives without conceptual framing or real-world applications.
+- News reporting without analysis, synthesis, or personal perspective.
+- Content that is overly abstract, theoretical, or lacking in actionable takeaways.
+
+---
+
+**Summary:**  
+This reader is a practical experimenter, seeking actionable advice and frameworks for self-improvement, learning, writing, and technology. They appreciate clear, concise, and personable writing, especially when it is meta-aware, reflective, and draws from authentic personal experience. They are drawn to content that teaches them how to think and do, not just what to think or do, and especially value contrarian insights and tools for continuous iteration.
