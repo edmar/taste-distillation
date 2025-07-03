@@ -1,0 +1,117 @@
+post_id,title,url,score,descendants,time,author,type,your_vote,source,date,hour,day_of_week,domain,category
+32137397,The AI Battle,https://aifuture.substack.com/p/the-ai-battle-rages-on,79,128,1658146644,ajafari1,story,1,favorites,2022-07-18,9,0,aifuture.substack.com,story
+32087557,Kurt Vonnegut on the “shapes” of stories,https://bigthink.com/high-culture/vonnegut-shapes/,246,77,1657740037,aleyan,story,1,favorites,2022-07-13,16,2,bigthink.com,story
+32104609,SearchHut,https://searchhut.org/,385,155,1657859250,tsujp,story,1,favorites,2022-07-15,1,4,searchhut.org,story
+32095592,Show HN: I built an app for when I talk too much in online meetings,http://unblah.me/,451,189,1657804150,interleave,story,1,favorites,2022-07-14,10,3,unblah.me,show
+32075032,My experience writing and selling a short story,https://superamit.substack.com/p/short-stories-how-much-do-you-make,266,156,1657656799,superamit,story,1,favorites,2022-07-12,17,1,superamit.substack.com,story
+32043923,Writing: A misunderstood activity,https://www.solimanwrites.com/writing-the-most-misunderstood-activity/,146,63,1657454678,ahsoli,story,1,favorites,2022-07-10,9,6,solimanwrites.com,story
+31940277,Steelmanning: Discover the truth by helping your opponent,https://themindcollection.com/steelmanning-how-to-discover-the-truth-by-helping-your-opponent/,275,180,1656633168,kjhughes,story,1,favorites,2022-06-30,20,3,themindcollection.com,story
+30818253,Technicolor Tokyo,https://neocha.com/magazine/technicolor-tokyo/,322,73,1648363296,keiferski,story,1,favorites,2022-03-27,3,6,neocha.com,story
+44268106,Show HN: Tidalbase – Pair programming platform for solo devs and open source,https://www.tidalbase.com/landing/,12,0,1749819554,cyndersly,story,1,upvoted,2025-06-13,9,4,tidalbase.com,show
+44236926,Show HN: PyDoll – Async Python scraping engine with native CAPTCHA bypass,https://github.com/autoscrape-labs/pydoll,136,39,1749564095,thalissonvs,story,1,upvoted,2025-06-10,11,1,github.com,show
+44253083,Show HN: The Roman Industrial Revolution that could have been,https://thelydianstone.com/,65,82,1749685914,miki_tyler,story,1,upvoted,2025-06-11,20,2,thelydianstone.com,show
+44241202,Show HN: A “Course” as an MCP Server,https://mastra.ai/course,212,32,1749587815,codekarate,story,1,upvoted,2025-06-10,17,1,mastra.ai,show
+44287041,Show HN: How to Read Code,https://www.codedump.info/en/post/20200605-how-to-read-code/,5,0,1750054477,codedump,story,1,upvoted,2025-06-16,3,0,codedump.info,show
+44276041,Unsupervised Elicitation of Language Models,https://arxiv.org/abs/2506.10139,131,20,1749904340,kordlessagain,story,1,upvoted,2025-06-14,9,5,arxiv.org,story
+44292103,Show HN: Canine – A Heroku alternative built on Kubernetes,https://github.com/czhu12/canine,142,69,1750098479,czhu12,story,1,upvoted,2025-06-16,15,0,github.com,show
+44285440,DARPA program sets distance record for power beaming,https://www.darpa.mil/news/2025/darpa-program-distance-record-power-beaming,140,101,1750027240,gnabgib,story,1,upvoted,2025-06-15,19,6,darpa.mil,story
+44288377,Snorting the AGI with Claude Code,https://kadekillary.work/blog/#2025-06-16-snorting-the-agi-with-claude-code,175,78,1750071692,beigebrucewayne,story,1,upvoted,2025-06-16,8,0,kadekillary.work,story
+44254627,Text-to-LoRA: Hypernetwork that generates task-specific LLM adapters (LoRAs),https://github.com/SakanaAI/text-to-lora,126,15,1749707470,dvrp,story,1,upvoted,2025-06-12,2,3,github.com,story
+44271284,Self-Adapting Language Models,https://arxiv.org/abs/2506.10943,238,75,1749841422,archon1410,story,1,upvoted,2025-06-13,16,4,arxiv.org,story
+44250206,Darwin Godel Machine: Open-Ended Evolution of Self-Improving Agents,https://arxiv.org/abs/2505.22954,55,16,1749665224,tzury,story,1,upvoted,2025-06-11,15,2,arxiv.org,story
+44240302,Launch HN: Vassar Robotics (YC X25) – $219 robot arm that learns new skills,item?id=44240302,578,219,1749582737,charleszyong,story,1,upvoted,2025-06-10,16,1,,story
+44063703,Claude 4,https://www.anthropic.com/news/claude-4,2013,1170,1747931682,meetpateltech,story,1,upvoted,2025-05-22,13,3,anthropic.com,story
+43988315,Perverse incentives of vibe coding,https://fredbenenson.medium.com/the-perverse-incentives-of-vibe-coding-23efbaf75aee,207,228,1747250978,laurex,story,1,upvoted,2025-05-14,16,2,fredbenenson.medium.com,story
+43959071,Continuous Thought Machines,https://pub.sakana.ai/ctm/,315,36,1747016471,hardmaru,story,1,upvoted,2025-05-11,23,6,pub.sakana.ai,story
+43738195,Don't force your kids to do math,https://blog.avocados.ovh/posts/how-to-force-your-kids-to-do-math/,249,417,1745086122,happycats,story,1,upvoted,2025-04-19,15,5,blog.avocados.ovh,story
+43708025,OpenAI Codex CLI: Lightweight coding agent that runs in your terminal,https://github.com/openai/codex,516,289,1744824290,mfiguiere,story,1,upvoted,2025-04-16,14,2,github.com,story
+43630661,A guide to reduce screen time,https://speedbumpapp.com/en/blog/how-to-reduce-screen-time/,134,105,1744194882,nullderef,story,1,upvoted,2025-04-09,7,2,speedbumpapp.com,story
+43620279,Brazil's government-run payments system has become dominant,https://www.economist.com/the-americas/2025/04/03/brazils-government-run-payments-system-has-become-dominant,667,769,1744109966,jcartw,story,1,upvoted,2025-04-08,7,1,economist.com,story
+43587380,The blissful Zen of a good side project,https://joshcollinsworth.com/blog/the-blissful-zen-of-a-good-side-project,567,136,1743799055,ingve,story,1,upvoted,2025-04-04,17,4,joshcollinsworth.com,story
+43558858,PaperBench,https://openai.com/index/paperbench,110,29,1743613605,meetpateltech,story,1,upvoted,2025-04-02,14,2,openai.com,story
+43546004,Why F#?,https://batsov.com/articles/2025/03/30/why-fsharp/,447,413,1743510847,bozhidar,story,1,upvoted,2025-04-01,9,1,batsov.com,story
+43348379,Practical UX for startups surviving without a designer,https://www.tibinotes.com/p/practical-ux-for-startups-surviving,422,180,1741818750,tb8424,story,1,upvoted,2025-03-12,19,2,tibinotes.com,story
+43345575,"Show HN: Nuanced – Help AI understand code structure, not just text",https://www.nuanced.dev/blog/initial-launch,34,13,1741800398,aymandfire,story,1,upvoted,2025-03-12,14,2,nuanced.dev,show
+43344082,Gemini Robotics,https://deepmind.google/discover/blog/gemini-robotics-brings-ai-into-the-physical-world/,933,561,1741792149,meetpateltech,story,1,upvoted,2025-03-12,12,2,deepmind.google,story
+43254351,Show HN: Fork of Claude-code working with local and other LLM providers,https://github.com/dnakov/anon-kode,177,38,1741095312,npace12,story,1,upvoted,2025-03-04,10,1,github.com,show
+43280615,Show HN: CodeTracer – A time-traveling debugger implemented in Nim and Rust,https://github.com/metacraft-labs/codetracer,334,52,1741271410,alehander42,story,1,upvoted,2025-03-06,11,3,github.com,show
+43269330,Show HN: Beating Pokemon Red with RL and <10M Parameters,https://drubinstein.github.io/pokerl/,183,68,1741194429,drubs,story,1,upvoted,2025-03-05,14,2,drubinstein.github.io,show
+43256113,Should managers still code?,https://theengineeringmanager.substack.com/p/should-managers-still-code,245,307,1741102872,blah2244,story,1,upvoted,2025-03-04,12,1,theengineeringmanager.substack.com,story
+43220938,Copilot for Everything: Training your AI replacement one keystroke at a time,https://substack.com/home/post/p-158101095,132,84,1740846783,jxmorris12,story,1,upvoted,2025-03-01,13,5,substack.com,story
+43176553,Emergent Misalignment: Narrow finetuning can produce broadly misaligned LLMs [pdf],https://martins1612.github.io/emergent_misalignment_betley.pdf,179,100,1740513581,tmnvdb,story,1,upvoted,2025-02-25,16,1,martins1612.github.io,story
+43168838,Winners of the $10k ISBN visualization bounty,https://annas-archive.org/blog/all-isbns-winners.html,601,66,1740464816,rzk,story,1,upvoted,2025-02-25,3,1,annas-archive.org,story
+43090214,Show HN: Scripton – Python IDE with built-in realtime visualizations,https://scripton.dev,449,139,1739890629,nightcraft,story,1,upvoted,2025-02-18,11,1,scripton.dev,show
+43019352,A Year of Telepathy,https://neuralink.com/blog/a-year-of-telepathy/,194,314,1739313991,julianh65,story,1,upvoted,2025-02-11,19,1,neuralink.com,story
+43015631,ASTRA: HackerRank's coding benchmark for LLMs,https://www.hackerrank.com/ai/astra-reports,51,14,1739295458,rvivek,story,1,upvoted,2025-02-11,14,1,hackerrank.com,story
+43014918,LLMs can teach themselves to better predict the future,https://arxiv.org/abs/2502.05253,176,86,1739292020,bturtel,story,1,upvoted,2025-02-11,13,1,arxiv.org,story
+43015267,Launch HN: A0.dev (YC W25) – React Native App Generator,item?id=43015267,263,97,1739293715,sethburster,story,1,upvoted,2025-02-11,14,1,,story
+42872276,Advice for a friend who wants to start a blog,https://www.henrikkarlsson.xyz/p/start-a-blog,348,190,1738190714,jger15,story,1,upvoted,2025-01-29,19,2,henrikkarlsson.xyz,story
+42842123,"Show HN: I Created ErisForge, a Python Library for Abliteration of LLMs",https://github.com/Tsadoq/ErisForge,140,52,1737991794,tsadoq,story,1,upvoted,2025-01-27,12,0,github.com,show
+42811502,Trae: AI Code Editor from ByteDance,https://www.trae.ai,85,61,1737707787,gniting,story,1,upvoted,2025-01-24,5,4,trae.ai,story
+42771676,I am (not) a failure: Lessons learned from six failed startup attempts,http://blog.rongarret.info/2025/01/i-am-not-failure-lessons-learned-from.html,547,313,1737398445,lisper,story,1,upvoted,2025-01-20,15,0,blog.rongarret.info,story
+42768072,DeepSeek-R1,https://github.com/deepseek-ai/DeepSeek-R1,1843,663,1737376678,meetpateltech,story,1,upvoted,2025-01-20,9,0,github.com,story
+42727329,A generative model for inorganic materials design,https://www.nature.com/articles/s41586-025-08628-5,47,5,1737044383,rbanffy,story,1,upvoted,2025-01-16,13,3,nature.com,story
+42688392,Titans: Learning to Memorize at Test Time,https://arxiv.org/abs/2501.00663,115,15,1736799074,birriel,story,1,upvoted,2025-01-13,17,0,arxiv.org,story
+42726584,Test-driven development with an LLM for fun and profit,https://blog.yfzhou.fyi/posts/tdd-llm/,219,89,1737041419,crazylogger,story,1,upvoted,2025-01-16,12,3,blog.yfzhou.fyi,story
+42704160,Show HN: Simplex: Automate browser workflows using code and natural language,https://www.simplex.sh/playground,147,37,1736890214,marcon680,story,1,upvoted,2025-01-14,18,1,simplex.sh,show
+42705935,Transformer^2: Self-Adaptive LLMs,https://sakana.ai/transformer-squared/,160,50,1736901455,hardmaru,story,1,upvoted,2025-01-14,21,1,sakana.ai,story
+42660184,How we used GPT-4o for image detection with 350 similar illustrations,https://olup-blog.pages.dev/stories/image-detection-cars,222,90,1736542952,olup,story,1,upvoted,2025-01-10,18,4,olup-blog.pages.dev,story
+42700852,Show HN: WASM-powered codespaces for Python notebooks on GitHub,https://docs.marimo.io/guides/publishing/playground/#open-notebooks-hosted-on-github,204,27,1736876801,mscolnick,story,1,upvoted,2025-01-14,14,1,docs.marimo.io,show
+44293837,DRM Can Watch You Too: Privacy Effects of Browsers' Widevine EME (2023),https://hal.science/hal-04179324v1/document,39,10,1750111618,exceptione,story,0,non_voted,2025-06-16,19,0,hal.science,story
+44293260,Show HN: Chawan TUI web browser,https://chawan.net/news/chawan-0-2-0.html,155,19,1750106923,shiomiru,story,0,non_voted,2025-06-16,17,0,chawan.net,show
+44290413,Benzene at 200,https://www.chemistryworld.com/opinion/benzene-at-200/4021504.article,169,92,1750087007,Brajeshwar,story,0,non_voted,2025-06-16,12,0,chemistryworld.com,story
+44293044,Retrobootstrapping Rust for some reason,https://graydon2.dreamwidth.org/317484.html,87,30,1750105184,romac,story,0,non_voted,2025-06-16,17,0,graydon2.dreamwidth.org,story
+44291204,"Open-Source RISC-V: Energy Efficiency of Superscalar, Out-of-Order Execution",https://arxiv.org/abs/2505.24363,56,12,1750092415,PaulHoule,story,0,non_voted,2025-06-16,13,0,arxiv.org,story
+44290331,OpenTelemetry for Go: Measuring overhead costs,https://coroot.com/blog/opentelemetry-for-go-measuring-the-overhead/,93,34,1750086557,openWrangler,story,0,non_voted,2025-06-16,12,0,coroot.com,story
+44288937,Working on databases from prison,https://turso.tech/blog/working-on-databases-from-prison,674,436,1750077122,dvektor,story,0,non_voted,2025-06-16,9,0,turso.tech,story
+44284871,Show HN: Zeekstd – Rust Implementation of the ZSTD Seekable Format,https://github.com/rorosen/zeekstd,172,37,1750020558,rorosen,story,0,non_voted,2025-06-15,17,6,github.com,show
+44293358,Blaze (YC S24) Is Hiring,https://www.ycombinator.com/companies/blaze-2/jobs/dzNmNuw-junior-software-engineer,1,0,1750107647,faiyamrahman,job,0,non_voted,2025-06-16,18,0,ycombinator.com,job
+44293147,Show HN: Nexus.js - Fabric.js for 3D,https://punk.cam/lab/nexus,39,15,1750106025,ges,story,0,non_voted,2025-06-16,17,0,punk.cam,show
+44292601,Breaking Quadratic Barriers: A Non-Attention LLM for Ultra-Long Context Horizons,https://arxiv.org/abs/2506.01963,39,17,1750101597,PaulHoule,story,0,non_voted,2025-06-16,16,0,arxiv.org,story
+44293988,OpenAI wins $200M U.S. defense contract,https://www.cnbc.com/2025/06/16/openai-wins-200-million-us-defense-contract.html,41,28,1750113118,erikrit,story,0,non_voted,2025-06-16,19,0,cnbc.com,story
+44287043,Nanonets-OCR-s – OCR model that transforms documents into structured markdown,https://huggingface.co/nanonets/Nanonets-OCR-s,276,63,1750054496,PixelPanda,story,0,non_voted,2025-06-16,3,0,huggingface.co,story
+44285874,Is gravity just entropy rising? Long-shot idea gets another look,https://www.quantamagazine.org/is-gravity-just-entropy-rising-long-shot-idea-gets-another-look-20250613/,252,219,1750034201,pseudolus,story,0,non_voted,2025-06-15,21,6,quantamagazine.org,story
+44265071,Identity Assertion Authorization Grant,https://www.ietf.org/archive/id/draft-parecki-oauth-identity-assertion-authz-grant-03.html,4,2,1749779834,mooreds,story,0,non_voted,2025-06-12,22,3,ietf.org,story
+44290121,"Show HN: dk – A script runner and cross-compiler, written in OCaml",https://diskuv.com/dk/help/latest/,51,5,1750085374,beckford,story,0,non_voted,2025-06-16,11,0,diskuv.com,show
+44293610,What Happens When Clergy Take Psilocybin,https://nautil.us/clergy-blown-away-by-psilocybin-1217112/,44,42,1750109649,bookofjoe,story,0,non_voted,2025-06-16,18,0,nautil.us,story
+44290315,ZjsComponent: A Pragmatic Approach to Reusable UI Fragments for Web Development,https://arxiv.org/abs/2506.11016,61,44,1750086462,lelanthran,story,0,non_voted,2025-06-16,12,0,arxiv.org,story
+44289412,WhatsApp introduces ads in its app,https://www.nytimes.com/2025/06/16/technology/whatsapp-ads.html,205,296,1750081139,greenburger,story,0,non_voted,2025-06-16,10,0,nytimes.com,story
+44275974,Adding public transport data to Transitous,https://www.volkerkrause.eu/2025/06/14/transitous-adding-data.html,46,0,1749903789,todsacerdoti,story,0,non_voted,2025-06-14,9,5,volkerkrause.eu,story
+44282378,Why SSL was renamed to TLS in late 90s (2014),https://tim.dierks.org/2014/05/security-standards-and-name-changes-in.html,516,223,1749996637,Bogdanp,story,0,non_voted,2025-06-15,11,6,tim.dierks.org,story
+44293132,Denmark tests unmanned robotic sailboat fleet,https://apnews.com/article/denmark-robot-sailboats-baltic-sea-bfa31c98cf7c93320115c0ad0e6908c5,31,5,1750105910,domofutu,story,0,non_voted,2025-06-16,17,0,apnews.com,story
+44287395,Start your own Internet Resiliency Club,https://bowshock.nl/irc/,522,295,1750059497,todsacerdoti,story,0,non_voted,2025-06-16,4,0,bowshock.nl,story
+44275134,Maya Blue: Unlocking the Mysteries of an Ancient Pigment,https://www.mexicolore.co.uk/maya/home/maya-blue-unlocking-the-mysteries-of-an-ancient-pigment,73,17,1749890905,DanielKehoe,story,0,non_voted,2025-06-14,5,5,mexicolore.co.uk,story
+44275014,Occurences of swearing in the Linux kernel source code over time,"https://www.vidarholen.net/contents/wordcount/#fuck*,shit*,damn*,idiot*,retard*,crap*",139,217,1749888931,microsoftedging,story,0,non_voted,2025-06-14,5,5,vidarholen.net,story
+44291026,The Renegade Richard Foreman,https://yalereview.org/article/jennifer-krasinski-richard-foreman,14,6,1750091073,prismatic,story,0,non_voted,2025-06-16,13,0,yalereview.org,story
+44290653,Darklang Goes Open Source,https://blog.darklang.com/darklang-goes-open-source/,144,66,1750088504,stachudotnet,story,0,non_voted,2025-06-16,12,0,blog.darklang.com,story
+44282143,Childhood leukemia: how a deadly cancer became treatable,https://ourworldindata.org/childhood-leukemia-treatment-history,294,87,1749993162,surprisetalk,story,0,non_voted,2025-06-15,10,6,ourworldindata.org,story
+44282998,Modifying an HDMI dummy plug's EDID using a Raspberry Pi,https://www.downtowndougbrown.com/2025/06/modifying-an-hdmi-dummy-plugs-edid-using-a-raspberry-pi/,291,84,1750003243,zdw,story,0,non_voted,2025-06-15,13,6,downtowndougbrown.com,story
+44285781,Jokes and Humour in the Public Android API,https://voxelmanip.se/2025/06/14/jokes-and-humour-in-the-public-android-api/,276,150,1750032895,todsacerdoti,story,0,non_voted,2025-06-15,21,6,voxelmanip.se,story
+44292342,Transparent peer review to be extended to all of Nature's research papers,https://www.nature.com/articles/d41586-025-01880-9,105,56,1750099893,rntn,story,0,non_voted,2025-06-16,15,0,nature.com,story
+44285392,Real-time CO2 monitoring without batteries or external power,https://news.kaist.ac.kr/newsen/html/news/?mode=V&mng_no=47450,121,29,1750026574,gnabgib,story,0,non_voted,2025-06-15,19,6,news.kaist.ac.kr,story
+44292989,OpenAI and Microsoft tensions are reaching a boiling point,https://www.wsj.com/tech/ai/openai-and-microsoft-tensions-are-reaching-a-boiling-point-4981c44f,67,25,1750104773,jmsflknr,story,0,non_voted,2025-06-16,17,0,wsj.com,story
+44291892,The Members of the Dull Men's Club,https://www.theguardian.com/society/2025/jun/09/meet-the-members-of-the-dull-mens-club-some-of-them-would-bore-the-ears-off-you,71,39,1750097257,herbertl,story,0,non_voted,2025-06-16,15,0,theguardian.com,story
+44284657,Twin – A Textmode WINdow Environment,https://github.com/cosmos72/twin,144,29,1750018047,kim_rutherford,story,0,non_voted,2025-06-15,17,6,github.com,story
+44275696,Quantum mechanics provide truly random numbers on demand,https://phys.org/news/2025-06-quantum-mechanics-random-demand.html,27,51,1749900398,bookofjoe,story,0,non_voted,2025-06-14,8,5,phys.org,story
+44281727,Datalog in Rust,https://github.com/frankmcsherry/blog/blob/master/posts/2025-06-03.md,319,40,1749986320,brson,story,0,non_voted,2025-06-15,8,6,github.com,story
+44290582,Object personification in autism: This paper will be sad if you don't read (2018),https://pubmed.ncbi.nlm.nih.gov/30101594/,93,91,1750088088,oliverkwebb,story,0,non_voted,2025-06-16,12,0,pubmed.ncbi.nlm.nih.gov,story
+44275737,A Framework for Characterizing Emergent Conflict Between Non-Coordinating Agents [pdf],https://paperclipmaximizer.ai/Unaware_Adversaries.pdf,22,2,1749900961,ycombiredd,story,0,non_voted,2025-06-14,8,5,paperclipmaximizer.ai,story
+44282017,How to modify Starlink Mini to run without the built-in WiFi router,https://olegkutkov.me/2025/06/15/how-to-modify-starlink-mini-to-run-without-the-built-in-wifi-router/,348,112,1749991207,LorenDB,story,0,non_voted,2025-06-15,9,6,olegkutkov.me,story
+44283614,"Simplest C++ Callback, from SumatraPDF",https://blog.kowalczyk.info/a-stsj/simplest-c-callback-from-sumatrapdf.html,160,158,1750008398,jandeboevrie,story,0,non_voted,2025-06-15,14,6,blog.kowalczyk.info,story
+44291963,Scientists genetically engineer a lethal mosquito STD to combat malaria,https://newatlas.com/biology/genetically-engineered-lethal-mosquito-std-combat-malaria/,40,31,1750097634,burnt-resistor,story,0,non_voted,2025-06-16,15,0,newatlas.com,story
+44261118,"First 2D, non-silicon computer developed",https://www.psu.edu/news/research/story/worlds-first-2d-non-silicon-computer-developed,135,28,1749752803,giuliomagnifico,story,0,non_voted,2025-06-12,15,3,psu.edu,story
+44289705,Mathematical Illustrations: A Manual of Geometry and PostScript,https://personal.math.ubc.ca/~cass/graphics/text/www/,52,19,1750083294,Bogdanp,story,0,non_voted,2025-06-16,11,0,personal.math.ubc.ca,story
+44283093,Datalog in miniKanren,https://deosjr.github.io/dynamicland/datalog.html,132,17,1750004168,deosjr,story,0,non_voted,2025-06-15,13,6,deosjr.github.io,story
+44284466,Telephone Exchanges in the UK,https://telephone-exchanges.org.uk/,164,68,1750016023,petecooper,story,0,non_voted,2025-06-15,16,6,telephone-exchanges.org.uk,story
+44275063,Mechanisms for Detection and Repair of Puncture Damage in Soft Robotics [pdf],https://smr.unl.edu/papers/Krings_et_al-2025-ICRA.pdf,21,0,1749889755,PaulHoule,story,0,non_voted,2025-06-14,5,5,smr.unl.edu,story
+44294685,"Norbauer Seneca review: a $3,600 luxury keyboard for the keyboard obsessed",https://www.theverge.com/reviews/659125/norbauer-seneca-review-luxury-capacitive-keyboard,1,0,1750121099,miles,story,0,non_voted,2025-06-16,21,0,theverge.com,story
+44294661,The Trump Mobile T1 Phone looks both bad and impossible,https://www.theverge.com/gadgets/687492/trump-mobile-phone-t1,3,0,1750120789,ceejayoz,story,0,non_voted,2025-06-16,21,0,theverge.com,story
+44294658,"Trump returns early from G7 meet, convenes Situation Room re: Iran-Israel war",https://www.cnn.com/world/live-news/israel-iran-attack-strikes-news-06-16-25-intl-hnk,1,0,1750120780,bhouston,story,0,non_voted,2025-06-16,21,0,cnn.com,story
+44294633,Why Generative AI Coding Tools and Agents Do Not Work For Me,https://blog.miguelgrinberg.com/post/why-generative-ai-coding-tools-and-agents-do-not-work-for-me,2,0,1750120425,nomdep,story,0,non_voted,2025-06-16,21,0,blog.miguelgrinberg.com,story
+44294629,George Orwell's 1984 and How Power Manufactures Truth,https://www.openculture.com/2025/06/an-introduction-to-george-orwells-1984-and-how-power-manufactures-truth.html,2,0,1750120399,colinprince,story,0,non_voted,2025-06-16,21,0,openculture.com,story
+44294624,What does it mean to use C++ in the front end?,,1,0,1750120372,AliceHe2003,story,0,non_voted,2025-06-16,21,0,news.ycombinator.com,story
+44294611,"Psychopaths thrive in societies with more corruption, poverty, and violence",https://www.newsweek.com/psychology-dark-triad-psychopathy-narcissism-personality-conditions-2085956,2,0,1750120240,ryan_j_naughton,story,0,non_voted,2025-06-16,21,0,newsweek.com,story
+44294603,OpenAI for Government,https://openai.com/global-affairs/introducing-openai-for-government/,2,1,1750120047,gmays,story,0,non_voted,2025-06-16,21,0,openai.com,story
+44294601,Alibaba touts Qwen3 AI model compatible with Apple platforms,https://appleinsider.com/articles/25/06/16/alibaba-announces-upgraded-qwen3-ai-model-compatible-with-apple-platforms,1,0,1750120023,alwillis,story,0,non_voted,2025-06-16,21,0,appleinsider.com,story
+44294596,LLM Exposure,https://thelastwave.substack.com/p/llm-exposure,1,0,1750120000,captainkrtek,story,0,non_voted,2025-06-16,21,0,thelastwave.substack.com,story
+44294589,Towards Automating Long-Horizon Algorithm Engineering for NP-Hard Problems,https://sakana.ai/ale-bench/,1,0,1750119948,hardmaru,story,0,non_voted,2025-06-16,21,0,sakana.ai,story

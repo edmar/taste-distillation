@@ -1,0 +1,7 @@
+{
+  "model_name": "openai/gpt-4o-mini",
+  "trained": true,
+  "model_type": "pairwise_comparison",
+  "json_path": "src/pairwise_classifier/models/pairwise_model.json",
+  "pkl_path": null
+}

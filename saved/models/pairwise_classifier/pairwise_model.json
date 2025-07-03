@@ -1,0 +1,40 @@
+{
+  "compare_titles.predict": {
+    "traces": [],
+    "train": [],
+    "demos": [],
+    "signature": {
+      "instructions": "Analyze the following two article titles and determine which one is likely to be favored by readers. Provide a reasoning process that evaluates their appeal, specificity, and potential audience engagement. Output the preferred title along with a confidence level indicating your certainty in the prediction.",
+      "fields": [
+        {
+          "prefix": "Title A:",
+          "description": "First article title to compare"
+        },
+        {
+          "prefix": "Title B:",
+          "description": "Second article title to compare"
+        },
+        {
+          "prefix": "Reasoning: Let's think step by step in order to",
+          "description": "${reasoning}"
+        },
+        {
+          "prefix": "Preferred Title:",
+          "description": "Which title is more likely to be favorite: 'A' or 'B'"
+        },
+        {
+          "prefix": "Confidence:",
+          "description": "Confidence level in the prediction: 'high', 'medium', or 'low'"
+        }
+      ]
+    },
+    "lm": null
+  },
+  "metadata": {
+    "dependency_versions": {
+      "python": "3.12",
+      "dspy": "2.6.24",
+      "cloudpickle": "3.1"
+    }
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "timestamp": "20250618_014450",
+  "model_name": "openai/gpt-4o-mini",
+  "model_type": "pairwise_comparison",
+  "training_examples": 200,
+  "validation_examples": 60,
+  "test_examples": 60,
+  "max_train_examples": 200,
+  "pair_strategy": "mixed",
+  "balanced": true,
+  "augment_flip": true,
+  "optimizer_type": "mipro",
+  "use_validation": true,
+  "stratify_by": "confidence",
+  "training_successful": true,
+  "model_save_path": "src/pairwise_classifier/models/pairwise_model.json",
+  "data_stats": {
+    "total_favorites": 1069,
+    "total_non_favorites": 14543,
+    "total_generated_pairs": 400
+  },
+  "split_stats": {
+    "train_pairs": 280,
+    "val_pairs": 60,
+    "test_pairs": 60
+  },
+  "training_confidence_distribution": {
+    "high": 200,
+    "medium": 0,
+    "low": 0
+  },
+  "training_pair_types": {
+    "nonfav_vs_fav": 103,
+    "fav_vs_nonfav": 97
+  },
+  "quick_evaluation": {
+    "accuracy": 0.46,
+    "total_examples": 50,
+    "correct_predictions": 23,
+    "confidence_distribution": {
+      "high": 44,
+      "medium": 6,
+      "low": 0
+    },
+    "confidence_accuracy": {
+      "high": 0.4772727272727273,
+      "medium": 0.3333333333333333,
+      "low": 0.0
+    }
+  }
+}
