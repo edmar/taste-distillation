@@ -215,7 +215,7 @@ def main():
     parser = argparse.ArgumentParser(description="Prepare data for DSPy favorite classifier")
     parser.add_argument('--data', type=str, default='data/raw/export.csv',
                         help='Path to raw data file')
-    parser.add_argument('--output', type=str, default='data/processed/dspy_favorite',
+    parser.add_argument('--output', type=str, default='data/processed/reader_favorite',
                         help='Output directory for processed datasets')
     parser.add_argument('--train-ratio', type=float, default=0.7,
                         help='Training set ratio')

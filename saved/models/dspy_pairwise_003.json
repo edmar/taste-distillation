@@ -1,0 +1,73 @@
+{
+  "compare_titles.predict": {
+    "traces": [],
+    "train": [],
+    "demos": [
+      {
+        "augmented": true,
+        "title_a": "The Magnetic Shadow Effect [video]",
+        "title_b": "All the data can be yours: reverse engineering APIs",
+        "reasoning": "Title B, \"All the data can be yours: reverse engineering APIs,\" is much more aligned with the core interests and taste rubric. It promises practical, actionable content (reverse engineering APIs), which is directly relevant to applied technology, developer tooling, and continuous learning. The title suggests a hands-on, possibly contrarian approach to accessing and leveraging data, which fits the reader's preference for practical experimentation and frameworks. In contrast, Title A, \"The Magnetic Shadow Effect [video],\" is vague, lacks context, and does not clearly connect to any of the core interests (unless the effect is directly related to technology or learning, which is not indicated). Title B is also more likely to offer technical depth, conceptual framing, and actionable takeaways.",
+        "preferred_title": "B",
+        "confidence": "high"
+      },
+      {
+        "augmented": true,
+        "title_a": "Finding and understanding bugs in C compilers [pdf] (2011)",
+        "title_b": "My 25-year adventure in AI and ML",
+        "reasoning": "Title A, \"Finding and understanding bugs in C compilers,\" suggests a technical deep dive into debugging and compiler reliability, which is interesting for those focused on low-level software engineering. However, it is narrowly focused on C compilers and may be more about technical forensics than frameworks, learning, or meta-level thinking. Title B, \"My 25-year adventure in AI and ML,\" promises a reflective, personal narrative spanning decades of AI and machine learning. This aligns well with the reader's core interests: applied AI, continuous learning, and personal experience. The title hints at lessons learned, possibly frameworks or mental models developed over time, and authentic storytelling—matching the rubric's preference for actionable insights, meta-reflection, and connecting macro trends to personal growth. While Title A is technical, Title B is more likely to offer the kind of reflective, big-picture, and experience-driven content that this reader favors.",
+        "preferred_title": "B",
+        "confidence": "high"
+      },
+      {
+        "augmented": true,
+        "title_a": "Embabel Agent Framework for the JVM",
+        "title_b": "Darwin Godel Machine: Open-Ended Evolution of Self-Improving Agents",
+        "reasoning": "Title A, \"Embabel Agent Framework for the JVM,\" suggests a technical tool or library, likely relevant to Java developers interested in agent-based systems. While this could be interesting from a developer tooling perspective, the title is somewhat generic and doesn't indicate practical takeaways, frameworks, or personal experience. It also lacks a meta, reflective, or contrarian angle.\n\nTitle B, \"Darwin Godel Machine: Open-Ended Evolution of Self-Improving Agents,\" is more conceptually intriguing. It references open-ended evolution and self-improving agents, which ties into core interests around AI, automation, and meta-level thinking about intelligence and learning. The mention of \"Darwin\" and \"Godel\" hints at a deep, possibly contrarian or under-discussed approach to AI, which aligns with the reader's preference for analytical, conceptual, and reflective content. This title promises a big-picture, possibly philosophical exploration of AI systems that can improve themselves—highly relevant to the \"future of programming\" and continuous learning themes.",
+        "preferred_title": "B",
+        "confidence": "high"
+      },
+      {
+        "augmented": true,
+        "title_a": "Pure CSS Moon Phases",
+        "title_b": "Fei-Fei Li: Spatial intelligence is the next frontier in AI [video]",
+        "reasoning": "Title A, \"Pure CSS Moon Phases,\" suggests a technical demonstration or tutorial on creating moon phase visualizations using only CSS. While this is creative and potentially interesting for front-end developers, it is narrowly focused and lacks broader applicability to the reader's core interests, which center on applied AI, developer tooling, frameworks, and big-picture thinking.\n\nTitle B, \"Fei-Fei Li: Spatial intelligence is the next frontier in AI [video],\" directly addresses a major trend in AI, featuring a prominent thought leader. The topic of spatial intelligence in AI is highly relevant to the reader's interest in the future of programming, AI-driven products, and conceptual frameworks. Even though it's a video, the subject matter aligns with the reader's desire to stay ahead of the curve in AI research and to connect macro trends to practical action.",
+        "preferred_title": "B",
+        "confidence": "high"
+      }
+    ],
+    "signature": {
+      "instructions": "Compare two article titles and predict which one is more likely to be marked as favorite with detailed reasoning. Return 'A' or 'B' as the preferred title.\n\nUse the following taste rubric as guidance:\nTASTE RUBRIC:\n\n---\n\n### Core Interests \n\nCore interests:\n\nApplied AI and developer tooling – designing and shipping practical AI‑driven products; keen on the “future of programming,” especially ways LLMs can automate or augment software development workflows. You prototype with TypeScript, Next.js, Vitest, Drizzle ORM, and maintain SpecCraft (BDD‑style test logger).\n\nStartup execution and strategy – building companies from zero to one, obsessing over product‑market fit, rapid iteration, and business model design.\n\nTechnical writing and communication – producing crisp, explanatory content about complex systems; using writing as a thinking tool.\n\nScience‑fiction and big‑picture foresight – reading speculative fiction to explore societal and technological trajectories, then mapping those insights back to real‑world product ideas.\n\nDeliberate thinking frameworks – favoring reflective questioning, mental models, and structured reasoning to pressure‑test assumptions and guide decisions.\n\nContinuous learning – voracious reading across AI research, software engineering practices, and adjacent sciences to stay ahead of the curve.\n\n\n### 1. Common Themes\n\n**A. Self-Improvement & Productivity**\n- Articles about learning, improving habits, setting goals, and productivity frameworks.\n  - E.g., “HOWTO: Be more productive”, “Goal-Setting Doesn’t Work. Here’s What Does.”, “Don't End The Week With Nothing”, “First Action: A Smarter Alternative to GTD-Next Action for the Creatives”.\n\n**B. Knowledge Management & Learning**\n- Interest in methods, tools, and philosophies for acquiring, retaining, and organizing knowledge.\n  - E.g., “Use a Short Knowledge Cycle to Keep Your Cool”, “The Leitner Box—How to Remember Anything Forever”, “Janki Method — Using SRS to Improve Programming”, “Benefits of a daily diary and topic journals”.\n\n**C. Writing & Communication**\n- Strong preference for advice on writing, creative output, and effective communication.\n  - E.g., “Nonfiction Writing Advice”, “Selfish Writing”, “My morning writing practice”, “Write something”, “How to teach technical concepts with cartoons”, “Blog about what you’ve struggled with”.\n\n**D. Technology, AI, & Startups**\n- Engagement with trends, philosophy, and practicalities of technology and startups.\n  - E.g., “Meritech Capital \/ 2021 Review: SaaS IPOs”, “Machine Learning: The Great Stagnation”, “The Purpose of Technology”, “How Superhuman Built an Engine to Find Product\/Market Fit”, “Do Things that Don’t Scale”.\n\n**E. Psychology & Decision-Making**\n- Fascination with the motivations, emotions, and cognitive strategies behind action and inaction.\n  - E.g., “Good and Bad Procrastination”, “Understanding the emotions behind procrastination”, “Why We Want What Other People Have”, “Mental Models: The Best Way to Make Intelligent Decisions”.\n\n**F. Networking & Social Dynamics**\n- Interest in practical, unconventional approaches to networking and relationships.\n  - E.g., “Why You Need to Take 50 Coffee Meetings”, “Instagram DM: Direct Messaging to Network”, “How to make friends over the internet”.\n\n**G. Meta-Reflection & Contrarianism**\n- Drawn to self-referential, meta-level, or contrarian ideas.\n  - E.g., “Intellectual Hipsters and Meta-Contrarianism”, “The idea maze”, “The Wrong Side of Right”.\n\n---\n\n### 2. Content Patterns\n\n**A. Practical & Actionable**\n- Clear, implementable advice or strategies are favored.\n  - “How to Land Great Podcast Guests (With Email Scripts)”, “The Power of Ten Playbook”, “How To Sell”.\n\n**B. Analytical & Conceptual**\n- Enjoys frameworks, models, and deep dives into how things work.\n  - “Mental Models: The Best Way to Make Intelligent Decisions”, “The Purpose of Technology”, “Codus Operandi”.\n\n**C. Reflective & Philosophical**\n- Seeks articles that encourage introspection and questioning norms.\n  - “What Should You Do with Your Life? Directions and Advice”, “Write something”, “We're All Chasing One Another's Goals”.\n\n**D. Personal Experience & Anecdotal**\n- Values stories, personal struggles, and lessons learned.\n  - “Blog about what you’ve struggled with”, “Do things, write about it”, “My morning writing practice”.\n\n---\n\n### 3. Style Preferences\n\n**A. Clear & Direct**\n- Prefers writing that’s straightforward, avoids jargon unless it’s explained, and gets to the point.\n\n**B. Structured & List-Based**\n- Enjoys frameworks, numbered lists, “how-to”s, playbooks, and bullet points that make information easily digestible.\n\n**C. Engaging & Conversational**\n- Favors a personable, sometimes informal tone, often with humor or vulnerability.\n\n**D. Meta & Self-Referential**\n- Likes writing that acknowledges its own process, limitations, or context.\n\n**E. Concise but Deep**\n- Prefers depth over length; appreciates when complex ideas are distilled efficiently.\n\n---\n\n### 4. Decision Criteria: What Makes Content Interesting\n\n**A. Offers Practical Takeaways**\n- Provides actionable advice, scripts, or techniques the reader can use or experiment with.\n\n**B. Teaches How to Think or Learn**\n- Helps the reader upgrade their thinking, frameworks, or learning processes.\n\n**C. Explores Under-Discussed or Contrarian Ideas**\n- Challenges conventional wisdom, questions defaults, or presents fresh angles.\n\n**D. Shares Authentic Personal Experience**\n- Authors who share their own struggles, failures, or personal hacks are favored.\n\n**E. Connects Macro Trends to Personal Action**\n- Bridges big-picture trends (tech, AI, startups) to individual decisions or habits.\n\n**F. Balances Inspiration with Realism**\n- Motivational, but grounded with practical steps and honest acknowledgment of challenges.\n\n**G. Encourages Experimentation and Iteration**\n- Promotes trying, failing, tweaking—rather than perfection or rigid adherence to dogma.\n\n---\n\n**Examples of high-fit articles:**\n- “First Action: A Smarter Alternative to GTD-Next Action for the Creatives” (actionable, meta, practical)\n- “How to Write a Book – Without Even Trying (so hard) • Zettelkasten Method” (knowledge management, practical, writing-focused)\n- “Do Things that Don’t Scale” (contrarian, pragmatic, startup advice)\n- “Selfish Writing” (meta, personal experience, writing advice)\n- “Mental Models: The Best Way to Make Intelligent Decisions” (frameworks, deep thinking, practical)\n\n---\n\n**Articles less likely to fit:**\n- Purely inspirational or motivational pieces without practical advice.\n- Highly technical deep-dives without conceptual framing or real-world applications.\n- News reporting without analysis, synthesis, or personal perspective.\n- Content that is overly abstract, theoretical, or lacking in actionable takeaways.\n\n---\n\n**Summary:**  \nThis reader is a practical experimenter, seeking actionable advice and frameworks for self-improvement, learning, writing, and technology. They appreciate clear, concise, and personable writing, especially when it is meta-aware, reflective, and draws from authentic personal experience. They are drawn to content that teaches them how to think and do, not just what to think or do, and especially value contrarian insights and tools for continuous iteration.",
+      "fields": [
+        {
+          "prefix": "Title A:",
+          "description": "${title_a}"
+        },
+        {
+          "prefix": "Title B:",
+          "description": "${title_b}"
+        },
+        {
+          "prefix": "Reasoning:",
+          "description": "${reasoning}"
+        },
+        {
+          "prefix": "Preferred Title:",
+          "description": "${preferred_title}"
+        },
+        {
+          "prefix": "Confidence:",
+          "description": "${confidence}"
+        }
+      ]
+    },
+    "lm": null
+  },
+  "metadata": {
+    "dependency_versions": {
+      "python": "3.12",
+      "dspy": "2.6.27",
+      "cloudpickle": "3.1"
+    }
+  }
+}

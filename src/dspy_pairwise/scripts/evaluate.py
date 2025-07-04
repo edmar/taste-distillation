@@ -21,7 +21,7 @@ def accuracy_metric(example, pred, trace=None):
     """Simple accuracy metric for DSPy pairwise evaluation"""
     return example.preferred_title == pred.preferred_title
 
-def evaluate_model(test_size: int = None, model_path: str = 'saved/models/dspy_pairwise', num_threads: int = 16):
+def evaluate_model(test_size: int = None, model_path: str = 'saved/models/reader_pairwise', num_threads: int = 16, dataset_path: str = None):
     """Simple evaluation of DSPy pairwise classifier"""
     
     print("="*50)
@@ -29,11 +29,18 @@ def evaluate_model(test_size: int = None, model_path: str = 'saved/models/dspy_p
     print("="*50)
     
     # Load test data
-    csv_path = "data/processed/dspy_pairwise/test/pairwise_classifier.json"
+    if dataset_path is None:
+        csv_path = "data/processed/reader_pairwise/test/dspy_examples.json"
+    else:
+        csv_path = dataset_path
+    
     if not os.path.exists(csv_path):
         print(f"❌ Test data not found at: {csv_path}")
-        print("Please run prepare.py first to create test data")
+        if dataset_path is None:
+            print("Please run prepare.py first to create test data")
         return None
+    
+    print(f"📂 Loading dataset from: {csv_path}")
     
     # Load JSON test data
     with open(csv_path, 'r') as f:
@@ -66,7 +73,7 @@ def evaluate_model(test_size: int = None, model_path: str = 'saved/models/dspy_p
         print("✅ Loaded taste rubric")
     
     # Configure DSPy with cache disabled  
-    dspy.configure(lm=dspy.LM("openai/gpt-4o-mini", cache=False), cache=False)
+    dspy.configure(lm=dspy.LM("openai/gpt-4.1", cache=False), cache=False)
     
     # Initialize module
     module = PairwiseComparisonModule(use_reasoning=True, rubric=rubric)
@@ -84,8 +91,7 @@ def evaluate_model(test_size: int = None, model_path: str = 'saved/models/dspy_p
         module.load(json_path)
         print(f"✅ Loaded trained model from: {json_path}")
     else:
-        print(f"⚠️ No trained model found at: {json_path}")
-        print("Using untrained model")
+        print(f"📊 Running baseline evaluation with untrained model")
     
     # Run evaluation with configurable threading
     try:
@@ -93,7 +99,6 @@ def evaluate_model(test_size: int = None, model_path: str = 'saved/models/dspy_p
             devset=test_examples,
             num_threads=num_threads,
             display_progress=True,
-            display_table=5,
             max_errors=10  # Allow some errors without failing
         )
         
@@ -106,8 +111,7 @@ def evaluate_model(test_size: int = None, model_path: str = 'saved/models/dspy_p
         evaluator = Evaluate(
             devset=test_examples,
             num_threads=1,
-            display_progress=True,
-            display_table=5
+            display_progress=True
         )
         
         accuracy = evaluator(module, metric=accuracy_metric)
@@ -116,7 +120,7 @@ def evaluate_model(test_size: int = None, model_path: str = 'saved/models/dspy_p
     return accuracy
 
 
-def detailed_evaluation(test_size: int = None, model_path: str = 'saved/models/dspy_pairwise'):
+def detailed_evaluation(test_size: int = None, model_path: str = 'saved/models/dspy_pairwise', dataset_path: str = None):
     """More detailed evaluation with confidence breakdown"""
     
     print("\n" + "="*50)
@@ -124,10 +128,16 @@ def detailed_evaluation(test_size: int = None, model_path: str = 'saved/models/d
     print("="*50)
     
     # Load test data
-    csv_path = "data/processed/dspy_pairwise/test/pairwise_classifier.json"
+    if dataset_path is None:
+        csv_path = "data/processed/reader_pairwise/test/dspy_examples.json"
+    else:
+        csv_path = dataset_path
+    
     if not os.path.exists(csv_path):
         print(f"❌ Test data not found at: {csv_path}")
         return None
+    
+    print(f"📂 Loading dataset from: {csv_path}")
     
     with open(csv_path, 'r') as f:
         test_data = json.load(f)
@@ -143,7 +153,7 @@ def detailed_evaluation(test_size: int = None, model_path: str = 'saved/models/d
             rubric = f.read()
     
     # Configure DSPy
-    dspy.configure(lm=dspy.LM("openai/gpt-4o-mini", cache=False), cache=False)
+    dspy.configure(lm=dspy.LM("openai/gpt-4.1", cache=False), cache=False)
     
     # Initialize and load model
     module = PairwiseComparisonModule(use_reasoning=True, rubric=rubric)
@@ -153,7 +163,7 @@ def detailed_evaluation(test_size: int = None, model_path: str = 'saved/models/d
         module.load(json_path)
         print(f"✅ Loaded trained model from: {json_path}")
     else:
-        print(f"⚠️ Using untrained model")
+        print(f"📊 Running baseline evaluation with untrained model")
     
     # Manual evaluation for detailed analysis
     correct = 0
@@ -162,9 +172,6 @@ def detailed_evaluation(test_size: int = None, model_path: str = 'saved/models/d
     confidence_breakdown = {'high': {'correct': 0, 'total': 0}, 
                            'medium': {'correct': 0, 'total': 0}, 
                            'low': {'correct': 0, 'total': 0}}
-    
-    examples_shown = 0
-    max_examples = 3
     
     print(f"\nEvaluating {total} test pairs...")
     
@@ -187,16 +194,6 @@ def detailed_evaluation(test_size: int = None, model_path: str = 'saved/models/d
         confidence_breakdown[gt_confidence]['total'] += 1
         if is_correct:
             confidence_breakdown[gt_confidence]['correct'] += 1
-        
-        # Show some examples
-        if examples_shown < max_examples:
-            status = "✅" if is_correct else "❌"
-            print(f"\n{status} Example {i+1}:")
-            print(f"   A: {item['title_a'][:60]}...")
-            print(f"   B: {item['title_b'][:60]}...")
-            print(f"   Ground truth: {item['preference']} | Predicted: {predicted}")
-            print(f"   Confidence: {gt_confidence}")
-            examples_shown += 1
     
     # Calculate metrics
     overall_accuracy = correct / total
@@ -219,66 +216,74 @@ def detailed_evaluation(test_size: int = None, model_path: str = 'saved/models/d
 
 
 if __name__ == "__main__":
-    import sys
+    import argparse
     
-    # Check for help flag
-    if '--help' in sys.argv or '-h' in sys.argv:
-        print("""
-DSPy Pairwise Classifier Evaluation Script
-
-Usage: python evaluate.py [OPTIONS]
-
-Options:
-  <number>           Number of test examples to evaluate (default: all)
-  --model=PATH       Path to trained model (default: saved/models/dspy_pairwise)
-  --model PATH       Path to trained model (alternative format)
-  --threads=N        Number of parallel threads (default: 16)
-  --detailed         Run detailed evaluation with confidence breakdown
-  -h, --help         Show this help message
-
+    parser = argparse.ArgumentParser(
+        description="DSPy Pairwise Classifier Evaluation Script",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
 Examples:
   python evaluate.py                                      # Evaluate all test examples
-  python evaluate.py 200                                 # Evaluate 200 examples  
-  python evaluate.py --model=my_model                    # Use custom model path
+  python evaluate.py --test-size 200                     # Evaluate 200 examples  
+  python evaluate.py --model my_model                    # Use custom model path
   python evaluate.py --model saved/models/dspy_pairwise_001.json  # Use specific model
-  python evaluate.py 50 --threads=8                      # 50 examples with 8 threads
+  python evaluate.py --dataset data/processed/hn_pairwise/test.json  # Use different dataset
+  python evaluate.py --test-size 50 --threads 8          # 50 examples with 8 threads
   python evaluate.py --detailed                          # Run detailed analysis
-        """)
-        sys.exit(0)
+        """
+    )
     
-    # Parse command line arguments
-    test_size = None  # Default: use all test examples
-    model_path = 'saved/models/dspy_pairwise'
-    num_threads = 16
-    run_detailed = False
+    parser.add_argument(
+        '--test-size',
+        type=int,
+        default=None,
+        help='Number of test examples to evaluate (default: all)'
+    )
     
-    i = 1
-    while i < len(sys.argv):
-        arg = sys.argv[i]
-        if arg.lower() == 'all':
-            test_size = 1000  # Large number to ensure we use full test set
-        elif arg == '--detailed':
-            run_detailed = True
-        elif arg.startswith('--model='):
-            model_path = arg.split('=')[1]
-        elif arg == '--model' and i + 1 < len(sys.argv):
-            # Support --model PATH format
-            model_path = sys.argv[i + 1]
-            i += 1  # Skip the next argument
-        elif arg.startswith('--threads='):
-            num_threads = int(arg.split('=')[1])
-        else:
-            try:
-                test_size = int(arg)
-            except ValueError:
-                print(f"Warning: Ignoring unrecognized argument: {arg}")
-        i += 1
+    parser.add_argument(
+        '--model',
+        type=str,
+        default='saved/models/dspy_pairwise',
+        help='Path to trained model (default: saved/models/dspy_pairwise)'
+    )
+    
+    parser.add_argument(
+        '--dataset',
+        type=str,
+        default=None,
+        help='Path to dataset file (default: data/processed/reader_pairwise/test/dspy_examples.json)'
+    )
+    
+    parser.add_argument(
+        '--threads',
+        type=int,
+        default=16,
+        help='Number of parallel threads (default: 16)'
+    )
+    
+    parser.add_argument(
+        '--detailed',
+        action='store_true',
+        help='Run detailed evaluation with confidence breakdown'
+    )
+    
+    # Parse arguments
+    args = parser.parse_args()
     
     # Run evaluation
-    if run_detailed:
-        accuracy = detailed_evaluation(test_size=test_size, model_path=model_path)
+    if args.detailed:
+        accuracy = detailed_evaluation(
+            test_size=args.test_size,
+            model_path=args.model,
+            dataset_path=args.dataset
+        )
     else:
-        accuracy = evaluate_model(test_size=test_size, model_path=model_path, num_threads=num_threads)
+        accuracy = evaluate_model(
+            test_size=args.test_size,
+            model_path=args.model,
+            num_threads=args.threads,
+            dataset_path=args.dataset
+        )
     
     if accuracy is not None:
         print(f"\n✅ Evaluation completed! Accuracy: {accuracy:.3f}")

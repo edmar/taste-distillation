@@ -8,6 +8,7 @@ import sys
 import json
 import pandas as pd
 import dspy
+import argparse
 from datetime import datetime
 
 # Disable DSPy caching to avoid database conflicts in parallel training
@@ -22,8 +23,8 @@ def accuracy_metric(example, pred, trace=None):
     return example.is_favorite == pred.is_favorite
 
 def train_model(
-    data_path: str = "data/processed/dspy_favorite",
-    model_name: str = "openai/gpt-4o",
+    data_path: str = "data/processed/reader_favorite",
+    model_name: str = "openai/gpt-4.1",
     optimizer_type: str = "mipro",
     max_train_examples: int = None,
     max_bootstrapped_demos: int = 4,
@@ -41,7 +42,6 @@ def train_model(
     
     # Load training data
     train_path = f"{data_path}/train/dspy_examples.json"
-    val_path = f"{data_path}/val/dspy_examples.json"
     
     if not os.path.exists(train_path):
         print(f"❌ Training data not found at: {train_path}")
@@ -52,11 +52,6 @@ def train_model(
     with open(train_path, 'r') as f:
         train_data = json.load(f)
     
-    # Load validation examples if available
-    val_data = []
-    if os.path.exists(val_path):
-        with open(val_path, 'r') as f:
-            val_data = json.load(f)
     
     # Convert to DSPy Examples
     trainset = []
@@ -68,13 +63,6 @@ def train_model(
         ).with_inputs('title')
         trainset.append(example)
     
-    valset = []
-    for item in val_data:
-        example = dspy.Example(
-            title=item['title'],
-            is_favorite=item['is_favorite']
-        ).with_inputs('title')
-        valset.append(example)
     
     # Show training statistics
     favorites = [ex for ex in trainset if ex.is_favorite]
@@ -180,68 +168,25 @@ def train_model(
     return True
 
 if __name__ == "__main__":
-    # Check for help flag
-    if '--help' in sys.argv or '-h' in sys.argv:
-        print("""
-DSPy Favorite Classifier Training Script
-
-Usage: python train.py [OPTIONS]
-
-Options:
-  <number>           Maximum training examples to use (default: all)
-  mipro, bootstrap   Optimizer type (default: mipro)
-  light, medium, heavy  Auto optimization level for MIPROv2 (default: light)
-  --threads=N        Number of parallel threads (default: 16)
-  --model=MODEL      Language model to use (default: openai/gpt-4o)
-  -h, --help         Show this help message
-
-Examples:
-  python train.py                    # Train with all examples using MIPROv2
-  python train.py 500               # Train with 500 examples
-  python train.py bootstrap         # Use bootstrap optimizer
-  python train.py 1000 mipro heavy  # 1000 examples, MIPROv2, heavy optimization
-  python train.py --threads=8       # Use 8 parallel threads
-  python train.py --model=openai/gpt-4o-mini  # Use different model
-        """)
-        sys.exit(0)
+    parser = argparse.ArgumentParser(description='DSPy Favorite Classifier Training Script')
+    parser.add_argument('max_examples', nargs='?', type=int, help='Maximum training examples to use')
+    parser.add_argument('optimizer', nargs='?', choices=['mipro', 'bootstrap'], help='Optimizer type')
+    parser.add_argument('auto_level', nargs='?', choices=['light', 'medium', 'heavy'], help='Auto optimization level for MIPROv2')
+    parser.add_argument('--threads', type=int, help='Number of parallel threads')
+    parser.add_argument('--model', help='Language model to use')
     
-    # Default parameters
-    data_path = "data/processed/dspy_favorite"
-    model_name = "openai/gpt-4o"
-    optimizer_type = "mipro"
-    max_train_examples = None  # Default to all training examples
-    max_bootstrapped_demos = 4
-    max_labeled_demos = 4
-    num_threads = 16
-    auto_level = "light"
+    args = parser.parse_args()
     
-    # Parse command line arguments
-    for arg in sys.argv[1:]:
-        if arg.lower() in ['mipro', 'bootstrap']:
-            optimizer_type = arg.lower()
-        elif arg.lower() in ['light', 'medium', 'heavy']:
-            auto_level = arg.lower()
-        elif arg.startswith('--threads='):
-            num_threads = int(arg.split('=')[1])
-        elif arg.startswith('--model='):
-            model_name = arg.split('=')[1]
-        else:
-            try:
-                max_train_examples = int(arg)
-            except ValueError:
-                print(f"Warning: Ignoring unrecognized argument: {arg}")
+    # Build kwargs dict, only including non-None values
+    kwargs = {k: v for k, v in {
+        'max_train_examples': args.max_examples,
+        'optimizer_type': args.optimizer,
+        'auto_level': args.auto_level,
+        'num_threads': args.threads,
+        'model_name': args.model
+    }.items() if v is not None}
     
-    # Run training
-    success = train_model(
-        data_path=data_path,
-        model_name=model_name,
-        optimizer_type=optimizer_type,
-        max_train_examples=max_train_examples,
-        max_bootstrapped_demos=max_bootstrapped_demos,
-        max_labeled_demos=max_labeled_demos,
-        num_threads=num_threads,
-        auto_level=auto_level
-    )
+    success = train_model(**kwargs)
     
     if not success:
         sys.exit(1)

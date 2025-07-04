@@ -147,7 +147,7 @@ def create_dspy_examples(pairs: List[Dict]) -> List[dspy.Example]:
         example = dspy.Example(
             title_a=pair['title_a'],
             title_b=pair['title_b'],
-            preferred_title=pair['preference'],
+            preference=pair['preference'],
             confidence=pair['confidence']
         ).with_inputs('title_a', 'title_b')
         
@@ -208,7 +208,7 @@ def save_splits(splits: Dict[str, List[Dict]], output_dir: Path):
             examples_dict.append({
                 'title_a': ex.title_a,
                 'title_b': ex.title_b,
-                'preferred_title': ex.preferred_title,
+                'preference': ex.preference,
                 'confidence': ex.confidence
             })
         
@@ -263,7 +263,7 @@ def main():
     parser = argparse.ArgumentParser(description="Prepare data for DSPy pairwise classifier")
     parser.add_argument('--data', type=str, default='data/raw/export.csv',
                         help='Path to raw data file')
-    parser.add_argument('--output', type=str, default='data/processed/dspy_pairwise',
+    parser.add_argument('--output', type=str, default='data/processed/reader_pairwise',
                         help='Output directory for processed datasets')
     parser.add_argument('--max-pairs', type=int, default=2000,
                         help='Maximum number of pairwise examples to generate')
@@ -322,9 +322,9 @@ def main():
     print("\nNext steps:")
     print("1. Review the data summary in:", output_dir / 'dspy_pairwise_summary.json')
     print("2. Train the model with:", 
-          "python src/in_context_taste_models/dspy_pairwise/scripts/train.py")
+          "python src/dspy_pairwise/scripts/train.py")
     print("3. Evaluate the trained model with:", 
-          "python src/in_context_taste_models/dspy_pairwise/scripts/evaluate.py")
+          "python src/dspy_pairwise/scripts/evaluate.py")
 
 
 if __name__ == "__main__":

@@ -28,20 +28,19 @@ uv sync
 uv run python scripts/generate_rubric.py
 
 # 2. Prepare data for training
-uv run python src/in_context_taste_models/dspy_favorite/scripts/prepare.py
+uv run python src/dspy_favorite/scripts/prepare.py
 
 # 3. Train model (with various options)
-uv run python src/in_context_taste_models/dspy_favorite/scripts/train.py
-uv run python src/in_context_taste_models/dspy_favorite/scripts/train.py balanced
-uv run python src/in_context_taste_models/dspy_favorite/scripts/train.py 500 bootstrap
-uv run python src/in_context_taste_models/dspy_favorite/scripts/train.py 1000 mipro
+uv run python src/dspy_favorite/scripts/train.py
+uv run python src/dspy_favorite/scripts/train.py balanced
+uv run python src/dspy_favorite/scripts/train.py 500 bootstrap
+uv run python src/dspy_favorite/scripts/train.py 1000 mipro
 
 # 4. Evaluate trained model
-uv run python src/in_context_taste_models/dspy_favorite/scripts/evaluate.py
-uv run python src/in_context_taste_models/dspy_favorite/scripts/evaluate.py 200 true balanced
+uv run python src/dspy_favorite/scripts/evaluate.py
+uv run python src/dspy_favorite/scripts/evaluate.py 200 true balanced
 
 # 5. Run predictions on new data
-uv run python src/in_context_taste_models/dspy_favorite/scripts/predict.py
 ```
 
 ### Training Script Parameters
@@ -58,8 +57,8 @@ uv run python src/in_context_taste_models/dspy_favorite/scripts/predict.py
 ## Architecture Overview
 
 ### Core Model Types
-1. **Favorite Classifier** (`src/in_context_taste_models/dspy_favorite/`): Binary classification (is_favorite: True/False)
-2. **Pairwise Classifier** (`src/in_context_taste_models/dspy_pairwise/`): Preference ranking between pairs of articles
+1. **Favorite Classifier** (`src/dspy_favorite/`): Binary classification (is_favorite: True/False)
+2. **Pairwise Classifier** (`src/dspy_pairwise/`): Preference ranking between pairs of articles
 
 ### DSPy Implementation Pattern
 Each model follows a standardized structure:
@@ -70,14 +69,14 @@ Each model follows a standardized structure:
 - `scripts/predict.py` - Inference on new data
 
 ### Key Directories
-- `/data/` - Data storage with raw (`export.csv`) and processed splits
-- `/src/in_context_taste_models/` - DSPy-based models
+- `/data/` - Data storage with raw (`reader_export.csv`) and processed splits
+- `/src/` - DSPy-based models
 - `/lib/` - Shared utilities including Hacker News scraping
 - `/saved/` - Model checkpoints, rubrics, and training logs
 - `/scripts/` - High-level utility scripts
 
 ### Data Flow
-1. Raw data (`data/raw/export.csv`) contains article titles, URLs, and user preferences
+1. Raw data (`data/raw/reader_export.csv`) contains article titles, URLs, and user preferences
 2. Data preparation creates train/validation/test splits
 3. Rubric generation creates taste guidelines from user data
 4. Models are trained using DSPy optimizers (BootstrapFinetune, MIPROv2)

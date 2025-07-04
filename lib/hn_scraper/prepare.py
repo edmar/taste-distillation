@@ -245,7 +245,7 @@ def save_splits(splits: Dict[str, List[Dict]], output_dir: Path):
             minimal_pairs.append({
                 'title_a': pair['title_a'],
                 'title_b': pair['title_b'],
-                'preferred_title': pair['preference'],
+                'preference': pair['preference'],
                 'confidence': pair['confidence']
             })
         
@@ -255,8 +255,124 @@ def save_splits(splits: Dict[str, List[Dict]], output_dir: Path):
         print(f"Saved {split_name} DSPy examples: {len(minimal_pairs)} -> {dspy_json_path}")
 
 
+def generate_favorite_examples(df: pd.DataFrame, seed: int = 42) -> List[Dict]:
+    """
+    Generate favorite classification examples from the dataset.
+    Each example is a single article with a binary is_favorite label.
+    """
+    print(f"\nGenerating favorite examples...")
+    
+    random.seed(seed)
+    np.random.seed(seed)
+    
+    # Shuffle the dataframe to mix voted and non-voted examples
+    df_shuffled = df.sample(frac=1.0, random_state=seed).reset_index(drop=True)
+    
+    examples = []
+    for _, row in df_shuffled.iterrows():
+        example = {
+            'title': row['title'],
+            'url': row.get('url', ''),
+            'domain': row.get('domain', ''),
+            'score': int(row.get('score', 0)),
+            'is_favorite': bool(row['your_vote'])  # 1 becomes True, 0 becomes False
+        }
+        examples.append(example)
+    
+    print(f"Generated {len(examples)} favorite examples")
+    
+    # Print statistics
+    favorites = sum(1 for ex in examples if ex['is_favorite'])
+    non_favorites = len(examples) - favorites
+    
+    print(f"Favorites: {favorites} ({favorites/len(examples):.2%})")
+    print(f"Non-favorites: {non_favorites} ({non_favorites/len(examples):.2%})")
+    
+    return examples
+
+
+def save_favorite_splits(splits: Dict[str, List[Dict]], output_dir: Path):
+    """Save favorite data splits in multiple formats."""
+    
+    for split_name, split_examples in splits.items():
+        split_dir = output_dir / split_name
+        split_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Save full favorite data as JSON
+        json_path = split_dir / 'hn_favorite.json'
+        with open(json_path, 'w') as f:
+            json.dump(split_examples, f, indent=2)
+        print(f"Saved {split_name} JSON: {len(split_examples)} examples -> {json_path}")
+        
+        # Save minimal format for DSPy compatibility
+        minimal_examples = []
+        for example in split_examples:
+            minimal_examples.append({
+                'title': example['title'],
+                'is_favorite': example['is_favorite']
+            })
+        
+        dspy_json_path = split_dir / 'dspy_examples.json'
+        with open(dspy_json_path, 'w') as f:
+            json.dump(minimal_examples, f, indent=2)
+        print(f"Saved {split_name} DSPy examples: {len(minimal_examples)} -> {dspy_json_path}")
+
+
+def create_favorite_summary(splits: Dict[str, List[Dict]], output_dir: Path, source_file: str):
+    """Create a summary of the prepared favorite data."""
+    summary = {
+        'task': 'HN Favorite Classification',
+        'description': 'Binary classification to predict which HN posts user would favorite',
+        'data_source': source_file,
+        'created_at': datetime.now().isoformat(),
+        'splits': {}
+    }
+    
+    for split_name, split_examples in splits.items():
+        # Count statistics
+        favorites = sum(1 for ex in split_examples if ex['is_favorite'])
+        non_favorites = len(split_examples) - favorites
+        
+        # Calculate domain distribution
+        domain_counts = {}
+        score_stats = []
+        
+        for example in split_examples:
+            domain = example.get('domain', 'unknown')
+            domain_counts[domain] = domain_counts.get(domain, 0) + 1
+            score_stats.append(example.get('score', 0))
+        
+        # Get top domains
+        top_domains = dict(sorted(domain_counts.items(), key=lambda x: x[1], reverse=True)[:10])
+        
+        summary['splits'][split_name] = {
+            'total_examples': len(split_examples),
+            'favorites': favorites,
+            'non_favorites': non_favorites,
+            'favorite_ratio': favorites / len(split_examples) if split_examples else 0,
+            'score_stats': {
+                'min': min(score_stats) if score_stats else 0,
+                'max': max(score_stats) if score_stats else 0,
+                'mean': sum(score_stats) / len(score_stats) if score_stats else 0
+            },
+            'top_domains': top_domains,
+            'files': {
+                'full_data': f"{split_name}/hn_favorite.json",
+                'dspy_format': f"{split_name}/dspy_examples.json"
+            }
+        }
+    
+    # Save summary
+    summary_path = output_dir / 'hn_favorite_summary.json'
+    with open(summary_path, 'w') as f:
+        json.dump(summary, f, indent=2)
+    
+    print(f"\nFavorite summary saved to: {summary_path}")
+    return summary
+
+
 def create_summary(splits: Dict[str, List[Dict]], output_dir: Path, source_file: str):
-    """Create a summary of the prepared data."""
+    """Create a summary of the prepared pairwise data."""
     summary = {
         'task': 'HN Pairwise Preference Learning',
         'description': 'Pairwise comparison to predict which HN post user would upvote',
@@ -326,11 +442,11 @@ def create_summary(splits: Dict[str, List[Dict]], output_dir: Path, source_file:
 
 def main():
     """Main data preparation function."""
-    parser = argparse.ArgumentParser(description="Prepare HN data for pairwise preference learning")
+    parser = argparse.ArgumentParser(description="Prepare HN data for ML training (both pairwise and favorite formats)")
     parser.add_argument('--data', type=str, required=True,
                         help='Path to HN dataset CSV file')
-    parser.add_argument('--output', type=str, default='data/processed/hn_pairwise',
-                        help='Output directory for processed datasets')
+    parser.add_argument('--output-base', type=str, default='data/processed',
+                        help='Base output directory (will create hn_pairwise and hn_favorite subdirs)')
     parser.add_argument('--max-pairs', type=int, default=5000,
                         help='Maximum number of pairwise examples to generate')
     parser.add_argument('--strategy', type=str, default='balanced',
@@ -344,6 +460,9 @@ def main():
                         help='Test set ratio')
     parser.add_argument('--seed', type=int, default=42,
                         help='Random seed for reproducibility')
+    parser.add_argument('--format', type=str, default='both',
+                        choices=['pairwise', 'favorite', 'both'],
+                        help='Which format(s) to generate: pairwise, favorite, or both')
     
     args = parser.parse_args()
     
@@ -355,11 +474,11 @@ def main():
     else:
         csv_path = Path(args.data)
     
-    if not os.path.isabs(args.output):
+    if not os.path.isabs(args.output_base):
         project_root = Path(__file__).parent.parent.parent
-        output_dir = project_root / args.output
+        output_base = project_root / args.output_base
     else:
-        output_dir = Path(args.output)
+        output_base = Path(args.output_base)
     
     # Verify data exists
     if not csv_path.exists():
@@ -367,43 +486,89 @@ def main():
         sys.exit(1)
     
     print("="*60)
-    print("HN PAIRWISE DATASET PREPARATION")
+    print("HN DATASET PREPARATION")
     print("="*60)
+    print(f"Format: {args.format}")
     
     # Load and process data
     df = load_hn_data(str(csv_path))
     
-    # Generate pairwise examples
-    pairs = generate_pairwise_examples(df, args.max_pairs, args.strategy, args.seed)
+    # Generate datasets based on format selection
+    if args.format in ['pairwise', 'both']:
+        print("\n" + "="*50)
+        print("GENERATING PAIRWISE DATASET")
+        print("="*50)
+        
+        pairwise_output_dir = output_base / 'hn_pairwise'
+        
+        # Generate pairwise examples
+        pairs = generate_pairwise_examples(df, args.max_pairs, args.strategy, args.seed)
+        
+        # Create splits
+        pairwise_splits = split_pairwise_data(pairs, args.train_ratio, args.val_ratio, 
+                                            args.test_ratio, args.seed)
+        
+        # Save splits
+        save_splits(pairwise_splits, pairwise_output_dir)
+        
+        # Create summary
+        pairwise_summary = create_summary(pairwise_splits, pairwise_output_dir, str(csv_path))
+        
+        print(f"\n✅ Pairwise dataset saved to: {pairwise_output_dir}")
     
-    # Create splits
-    splits = split_pairwise_data(pairs, args.train_ratio, args.val_ratio, 
-                                args.test_ratio, args.seed)
-    
-    # Save splits
-    save_splits(splits, output_dir)
-    
-    # Create summary
-    summary = create_summary(splits, output_dir, str(csv_path))
+    if args.format in ['favorite', 'both']:
+        print("\n" + "="*50)
+        print("GENERATING FAVORITE DATASET")
+        print("="*50)
+        
+        favorite_output_dir = output_base / 'hn_favorite'
+        
+        # Generate favorite examples
+        favorite_examples = generate_favorite_examples(df, args.seed)
+        
+        # Create splits (reuse the same split function, it works for any list of examples)
+        favorite_splits = split_pairwise_data(favorite_examples, args.train_ratio, args.val_ratio, 
+                                            args.test_ratio, args.seed)
+        
+        # Save splits
+        save_favorite_splits(favorite_splits, favorite_output_dir)
+        
+        # Create summary
+        favorite_summary = create_favorite_summary(favorite_splits, favorite_output_dir, str(csv_path))
+        
+        print(f"\n✅ Favorite dataset saved to: {favorite_output_dir}")
     
     print("\n" + "="*60)
     print("DATA PREPARATION COMPLETE")
     print("="*60)
-    print(f"\nDataset Statistics:")
-    for split_name, info in summary['splits'].items():
-        print(f"\n{split_name.upper()}:")
-        print(f"  Total pairs: {info['total_pairs']}")
-        print(f"  Preferences: A={info['preference_distribution']['A']}, "
-              f"B={info['preference_distribution']['B']}")
-        print(f"  Confidence: {info['confidence_distribution']}")
-        print(f"  Vote patterns: {info['vote_patterns']}")
     
-    print("\n✅ Pairwise data preparation completed successfully!")
-    print("\nNext steps:")
-    print("1. Review the data summary in:", output_dir / 'hn_pairwise_summary.json')
-    print("2. Use the data for training preference models")
+    # Show statistics for generated datasets
+    if args.format in ['pairwise', 'both']:
+        print(f"\nPAIRWISE DATASET STATISTICS:")
+        for split_name, info in pairwise_summary['splits'].items():
+            print(f"\n{split_name.upper()}:")
+            print(f"  Total pairs: {info['total_pairs']}")
+            print(f"  Preferences: A={info['preference_distribution']['A']}, "
+                  f"B={info['preference_distribution']['B']}")
+            print(f"  Confidence: {info['confidence_distribution']}")
+    
+    if args.format in ['favorite', 'both']:
+        print(f"\nFAVORITE DATASET STATISTICS:")
+        for split_name, info in favorite_summary['splits'].items():
+            print(f"\n{split_name.upper()}:")
+            print(f"  Total examples: {info['total_examples']}")
+            print(f"  Favorites: {info['favorites']} ({info['favorite_ratio']:.2%})")
+            print(f"  Non-favorites: {info['non_favorites']}")
+    
+    print(f"\n✅ Dataset preparation completed successfully!")
+    print("\nGenerated datasets:")
+    if args.format in ['pairwise', 'both']:
+        print(f"  Pairwise: {output_base / 'hn_pairwise'}")
+    if args.format in ['favorite', 'both']:
+        print(f"  Favorite: {output_base / 'hn_favorite'}")
+    
     print("\nExample usage:")
-    print(f"python lib/hn_scraper/prepare.py --data {args.data}")
+    print(f"python lib/hn_scraper/prepare.py --data {args.data} --format both")
 
 
 if __name__ == "__main__":

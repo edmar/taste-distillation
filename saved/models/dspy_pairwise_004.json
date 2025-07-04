@@ -1,0 +1,73 @@
+{
+  "compare_titles.predict": {
+    "traces": [],
+    "train": [],
+    "demos": [
+      {
+        "augmented": true,
+        "title_a": "The Magnetic Shadow Effect [video]",
+        "title_b": "All the data can be yours: reverse engineering APIs",
+        "reasoning": "Title B, \"All the data can be yours: reverse engineering APIs,\" aligns more closely with the core interests and taste rubric. It suggests a practical, actionable deep dive into a technical topic—reverse engineering APIs—which is highly relevant to applied AI, developer tooling, and continuous learning. This topic likely offers frameworks, techniques, or personal experience, and could provide actionable takeaways for building or augmenting software products. The phrasing is engaging and hints at a contrarian or meta approach (unlocking data not meant to be easily accessible). In contrast, Title A, \"The Magnetic Shadow Effect [video],\" is vague and does not clearly signal relevance to the reader’s interests in technology, learning frameworks, or practical application. Additionally, the \"[video]\" tag may be a slight negative, as the rubric favors clear, concise, and structured written content.",
+        "preferred_title": "B",
+        "confidence": "high"
+      },
+      {
+        "augmented": true,
+        "title_a": "Finding and understanding bugs in C compilers [pdf] (2011)",
+        "title_b": "My 25-year adventure in AI and ML",
+        "reasoning": "Title A, \"Finding and understanding bugs in C compilers,\" is likely a technical deep-dive into compiler bugs, which could be interesting from a software engineering perspective, especially for those interested in systems programming or debugging. However, it is narrowly focused on C compilers and may be more about technical forensics than frameworks, meta-reflection, or actionable advice.\n\nTitle B, \"My 25-year adventure in AI and ML,\" promises a personal narrative spanning decades in the AI\/ML field. This aligns well with the reader's core interests: it likely contains authentic personal experience, lessons learned, and possibly meta-reflection on the evolution of AI and ML. The personal journey format suggests a blend of anecdote, big-picture trends, and practical insights—matching the rubric's preference for reflective, experience-driven, and conceptual content. It may also offer inspiration grounded in realism, and connect macro trends to individual action, which is highly valued.",
+        "preferred_title": "B",
+        "confidence": "high"
+      },
+      {
+        "augmented": true,
+        "title_a": "Embabel Agent Framework for the JVM",
+        "title_b": "Darwin Godel Machine: Open-Ended Evolution of Self-Improving Agents",
+        "reasoning": "Title A, \"Embabel Agent Framework for the JVM,\" suggests a practical tool or framework for building agents on the Java Virtual Machine. While this could be relevant to applied AI and developer tooling, the title is somewhat generic and doesn't indicate any particularly novel or contrarian approach, nor does it promise actionable frameworks or personal insight.\n\nTitle B, \"Darwin Godel Machine: Open-Ended Evolution of Self-Improving Agents,\" is much more conceptually intriguing. It references the Godel Machine, a theoretical construct in AI for self-improving systems, and combines it with the idea of open-ended evolution. This aligns with the reader's interest in AI, meta-reflection, and frameworks for continuous learning and improvement. The title hints at deep, possibly contrarian or under-discussed ideas about how agents can autonomously evolve and improve, which is likely to spark curiosity and offer new mental models or frameworks.\n\nGiven the rubric's emphasis on conceptual depth, frameworks for improvement, and big-picture thinking, Title B is more likely to be marked as a favorite.",
+        "preferred_title": "B",
+        "confidence": "high"
+      },
+      {
+        "augmented": true,
+        "title_a": "Pure CSS Moon Phases",
+        "title_b": "Fei-Fei Li: Spatial intelligence is the next frontier in AI [video]",
+        "reasoning": "Title A, \"Pure CSS Moon Phases,\" suggests a creative, possibly visually interesting technical project, but it is likely focused on front-end CSS tricks or visualizations. While this could appeal to a developer, it doesn't directly align with the core interests of applied AI, developer tooling, or frameworks for thinking and learning. Title B, \"Fei-Fei Li: Spatial intelligence is the next frontier in AI [video],\" directly addresses a cutting-edge topic in AI, featuring a prominent thought leader. It promises big-picture foresight, conceptual depth, and relevance to the future of AI-driven products—core interests for this reader. The video format is a slight mismatch for someone who prefers crisp, explanatory writing, but the subject matter and speaker outweigh that concern. Title B is much more likely to be marked as a favorite due to its alignment with AI, future trends, and conceptual frameworks.",
+        "preferred_title": "B",
+        "confidence": "high"
+      }
+    ],
+    "signature": {
+      "instructions": "You are acting as a content curator for a highly selective, invite-only newsletter read by leading founders, AI researchers, and technical writers. Your reputation is on the line: only the most relevant, actionable, and intellectually stimulating articles will make it to the front page, and a misjudgment could cause top subscribers to leave. \n\nGiven two candidate article titles, use the detailed taste rubric provided to decide which title is most likely to be marked as a favorite by the target reader. Your decision must be based on a careful synthesis of the rubric’s core interests, content patterns, style preferences, and decision criteria. \n\nFor each comparison, provide:\n- A concise but thorough reasoning that justifies your choice, referencing specific aspects of the rubric.\n- The preferred title (“A” or “B”).\n- Your confidence level (“high”, “medium”, or “low”) in your selection.\n\nRemember: If you select a title that fails to match the reader’s nuanced interests, the newsletter’s reputation—and your role as curator—will be at risk. Make your selection count.",
+      "fields": [
+        {
+          "prefix": "Title A:",
+          "description": "${title_a}"
+        },
+        {
+          "prefix": "Title B:",
+          "description": "${title_b}"
+        },
+        {
+          "prefix": "Reasoning:",
+          "description": "${reasoning}"
+        },
+        {
+          "prefix": "Preferred Title:",
+          "description": "${preferred_title}"
+        },
+        {
+          "prefix": "Confidence:",
+          "description": "${confidence}"
+        }
+      ]
+    },
+    "lm": null
+  },
+  "metadata": {
+    "dependency_versions": {
+      "python": "3.12",
+      "dspy": "2.6.27",
+      "cloudpickle": "3.1"
+    }
+  }
+}

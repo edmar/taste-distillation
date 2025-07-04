@@ -2,6 +2,23 @@ TASTE RUBRIC:
 
 ---
 
+### Core Interests 
+
+Core interests:
+
+Applied AI and developer tooling – designing and shipping practical AI‑driven products; keen on the “future of programming,” especially ways LLMs can automate or augment software development workflows. You prototype with TypeScript, Next.js, Vitest, Drizzle ORM, and maintain SpecCraft (BDD‑style test logger).
+
+Startup execution and strategy – building companies from zero to one, obsessing over product‑market fit, rapid iteration, and business model design.
+
+Technical writing and communication – producing crisp, explanatory content about complex systems; using writing as a thinking tool.
+
+Science‑fiction and big‑picture foresight – reading speculative fiction to explore societal and technological trajectories, then mapping those insights back to real‑world product ideas.
+
+Deliberate thinking frameworks – favoring reflective questioning, mental models, and structured reasoning to pressure‑test assumptions and guide decisions.
+
+Continuous learning – voracious reading across AI research, software engineering practices, and adjacent sciences to stay ahead of the curve.
+
+
 ### 1. Common Themes
 
 **A. Self-Improvement & Productivity**

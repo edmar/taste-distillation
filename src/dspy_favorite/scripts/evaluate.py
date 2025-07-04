@@ -20,7 +20,7 @@ def accuracy_metric(example, pred, trace=None):
     """Simple accuracy metric for DSPy evaluation"""
     return example.is_favorite == pred.is_favorite
 
-def evaluate_model(test_size: int = 100, model_name: str = 'dspy_favorite', num_threads: int = 16):
+def evaluate_model(test_size: int = None, model_path: str = 'saved/models/dspy_favorite', num_threads: int = 16):
     """Simple evaluation of DSPy favorite classifier"""
     
     print("="*50)
@@ -28,7 +28,7 @@ def evaluate_model(test_size: int = 100, model_name: str = 'dspy_favorite', num_
     print("="*50)
     
     # Load test data
-    csv_path = "data/processed/dspy_favorite/test/favorite_classifier.csv"
+    csv_path = "data/processed/reader_favorite/test/favorite_classifier.csv"
     if not os.path.exists(csv_path):
         print(f"❌ Test data not found at: {csv_path}")
         print("Please run prepare.py first to create test data")
@@ -36,8 +36,8 @@ def evaluate_model(test_size: int = 100, model_name: str = 'dspy_favorite', num_
     
     df = pd.read_csv(csv_path)
     
-    # Sample test examples (use all if test_size is large enough)
-    if test_size >= len(df):
+    # Sample test examples (use all if test_size is None or large enough)
+    if test_size is None or test_size >= len(df):
         print(f"Evaluating on full test set: {len(df)} examples")
     else:
         df = df.sample(n=test_size, random_state=42)
@@ -67,19 +67,19 @@ def evaluate_model(test_size: int = 100, model_name: str = 'dspy_favorite', num_
     module = TastePredictionModule(use_reasoning=True, rubric=rubric)
     
     # Load trained model if available
-    # Construct full path from model name
-    if model_name.endswith('.json'):
-        model_name = model_name[:-5]  # Remove .json if provided
-    
-    model_path = f"saved/models/{model_name}.json"
-    
-    if os.path.exists(model_path):
-        module.load(model_path)
-        print(f"✅ Loaded trained model: {model_name}")
+    # Handle both .json and non-.json paths
+    if model_path.endswith('.json'):
+        json_path = model_path
+        base_path = model_path[:-5]  # Remove .json extension
     else:
-        print(f"⚠️ No trained model found: {model_name}")
-        print(f"   Looking for: {model_path}")
-        print("Using untrained model")
+        json_path = f"{model_path}.json"
+        base_path = model_path
+    
+    if os.path.exists(json_path):
+        module.load(json_path)
+        print(f"✅ Loaded trained model from: {json_path}")
+    else:
+        print(f"📊 Running baseline evaluation with untrained model")
     
     # Run evaluation with configurable threading
     try:
@@ -87,7 +87,6 @@ def evaluate_model(test_size: int = 100, model_name: str = 'dspy_favorite', num_
             devset=test_examples,
             num_threads=num_threads,
             display_progress=True,
-            display_table=5,
             max_errors=10  # Allow some errors without failing
         )
         
@@ -100,8 +99,7 @@ def evaluate_model(test_size: int = 100, model_name: str = 'dspy_favorite', num_
         evaluator = Evaluate(
             devset=test_examples,
             num_threads=1,
-            display_progress=True,
-            display_table=5
+            display_progress=True
         )
         
         accuracy = evaluator(module, metric=accuracy_metric)
@@ -122,28 +120,36 @@ Usage: python evaluate.py [OPTIONS]
 
 Options:
   <number>           Number of test examples to evaluate (default: all)
-  --model=NAME       Model name in saved/models/ folder (default: dspy_favorite)
+  --model=PATH       Path to trained model (default: saved/models/dspy_favorite)
+  --model PATH       Path to trained model (alternative format)
   --threads=N        Number of parallel threads (default: 16)
   -h, --help         Show this help message
 
 Examples:
-  python evaluate.py                           # Evaluate all test examples with default model
-  python evaluate.py 200                      # Evaluate 200 examples  
-  python evaluate.py --model=dspy_favorite_001 # Use specific numbered model
-  python evaluate.py 50 --threads=8           # 50 examples with 8 threads
+  python evaluate.py                                      # Evaluate all test examples
+  python evaluate.py 200                                 # Evaluate 200 examples  
+  python evaluate.py --model=my_model                    # Use custom model path
+  python evaluate.py --model saved/models/dspy_favorite_001.json  # Use specific model
+  python evaluate.py 50 --threads=8                      # 50 examples with 8 threads
         """)
         sys.exit(0)
     
     # Parse command line arguments
-    test_size = 1000  # Default to all test examples (large number)
-    model_name = 'dspy_favorite'
+    test_size = None  # Default: use all test examples
+    model_path = 'saved/models/dspy_favorite'
     num_threads = 16
     
-    for arg in sys.argv[1:]:
+    i = 1
+    while i < len(sys.argv):
+        arg = sys.argv[i]
         if arg.lower() == 'all':
-            test_size = 1000  # Large number to ensure we use full test set
+            test_size = None  # Use all examples
         elif arg.startswith('--model='):
-            model_name = arg.split('=')[1]
+            model_path = arg.split('=')[1]
+        elif arg == '--model' and i + 1 < len(sys.argv):
+            # Support --model PATH format
+            model_path = sys.argv[i + 1]
+            i += 1  # Skip the next argument
         elif arg.startswith('--threads='):
             num_threads = int(arg.split('=')[1])
         else:
@@ -151,9 +157,10 @@ Examples:
                 test_size = int(arg)
             except ValueError:
                 print(f"Warning: Ignoring unrecognized argument: {arg}")
+        i += 1
     
     # Run evaluation
-    accuracy = evaluate_model(test_size=test_size, model_name=model_name, num_threads=num_threads)
+    accuracy = evaluate_model(test_size=test_size, model_path=model_path, num_threads=num_threads)
     
     if accuracy is not None:
         print(f"\n✅ Evaluation completed! Accuracy: {accuracy:.3f}")
