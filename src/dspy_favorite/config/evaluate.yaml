@@ -1,0 +1,47 @@
+# Evaluation Configuration for DSPy Taste Prediction
+# This file contains settings for model evaluation scripts
+
+# Default evaluation settings
+default:
+  # LLM settings
+  llm:
+    model_name: "openai/gpt-4o-mini"
+    cache: false
+    
+  # Evaluation parameters
+  evaluation:
+    num_threads: 16
+    default_test_size: null  # null means use all test examples
+    
+  # Data paths
+  paths:
+    default_dataset: "data/reader_shortlist/train/dspy_examples.json"
+    rubric: "saved/rubrics/personal_taste_rubric.txt"
+    models_dir: "saved/models"
+    logs_dir: "saved/logs"
+    default_model: "saved/models/dspy_shortlist"
+
+# LLM-specific configurations
+llms:
+  # Reasoning models require special parameters
+  o3:
+    model_name: "openai/o3"
+    temperature: 1.0
+    max_tokens: 20000
+    cache: false
+    
+  o3_mini:
+    model_name: "openai/o3-mini"
+    temperature: 1.0
+    max_tokens: 20000
+    cache: false
+    
+  # Standard models
+  gpt4o_mini:
+    model_name: "openai/gpt-4o-mini"
+    cache: false
+    
+  gpt4o:
+    model_name: "openai/gpt-4o"
+    cache: false
+

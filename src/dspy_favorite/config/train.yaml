@@ -1,0 +1,62 @@
+# Training Configuration for DSPy Taste Prediction
+# This file contains settings for model training scripts
+
+# Default training settings
+default:
+  # LLM settings
+  llm:
+    model_name: "openai/gpt-4o-mini"
+    cache: false
+    
+  # Training parameters
+  training:
+    optimizer: "mipro"  # mipro or bootstrap
+    auto_level: "light"  # light, medium, heavy (for mipro)
+    max_bootstrapped_demos: 4
+    max_labeled_demos: 4
+    num_threads: 16
+    max_train_examples: null  # null means use all training examples
+        
+  # Data paths
+  paths:
+    default_dataset: "data/reader_shortlist"
+    rubric: "saved/rubrics/personal_taste_rubric.txt"
+    models_dir: "saved/models"
+    logs_dir: "saved/logs"
+
+# LLM-specific configurations  
+llms:
+  # Reasoning models require special parameters
+  o3:
+    model_name: "openai/o3"
+    temperature: 1.0
+    max_tokens: 20000
+    cache: false
+    
+  o3_mini:
+    model_name: "openai/o3-mini"
+    temperature: 1.0
+    max_tokens: 20000
+    cache: false
+    
+  # Standard models
+  gpt4o_mini:
+    model_name: "openai/gpt-4o-mini"
+    cache: false
+    
+  gpt4o:
+    model_name: "openai/gpt-4o"
+    cache: false
+
+# Optimizer-specific configurations
+optimizers:
+  mipro:
+    auto_level: "light"
+    max_bootstrapped_demos: 4
+    max_labeled_demos: 4
+    
+  bootstrap:
+    max_bootstrapped_demos: 4
+    max_labeled_demos: 4
+    max_rounds: 1
+    max_errors: 10

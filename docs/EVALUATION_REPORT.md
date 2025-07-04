@@ -96,7 +96,7 @@ Average Metric: 173.00 / 225 (76.9%): 100%|████████████�
 ✅ Evaluation completed! Accuracy: 76.890
 
 
- uv run python src/dspy_pairwise/scripts/evaluate.py --model saved/models/dspy_pairwise_004.json --dataset data/processed/hn_pairwise/test/dspy_examples.json
+uv run python src/dspy_pairwise/scripts/evaluate.py --model saved/models/dspy_pairwise_004.json --dataset data/processed/hn_pairwise/test/dspy_examples.json
 ==================================================
 DSPy PAIRWISE CLASSIFIER EVALUATION
 ==================================================
@@ -112,3 +112,17 @@ Average Metric: 171.00 / 225 (76.0%): 100%|████████████�
 ✅ Evaluation completed! Accuracy: 76.000
 
 
+uv run python src/dspy_pairwise/scripts/evaluate.py --model saved/models/dspy_pairwise_004.json --dataset data/processed/hn_pairwise/train/dspy_examples.json
+==================================================
+DSPy PAIRWISE CLASSIFIER EVALUATION
+==================================================
+📂 Loading dataset from: data/processed/hn_pairwise/train/dspy_examples.json
+Evaluating on full test set: 1050 examples
+✅ Loaded taste rubric
+✅ Loaded trained model from: saved/models/dspy_pairwise_004.json
+Average Metric: 852.00 / 1050 (81.1%): 100%|██████████████████████████████████████████████████████████████████████| 1050/1050 [04:34<00:00,  3.82it/s]
+2025/07/03 22:01:55 INFO dspy.evaluate.evaluate: Average Metric: 852 / 1050 (81.1%)
+
+🎯 Accuracy: 81.140
+
+✅ Evaluation completed! Accuracy: 81.140

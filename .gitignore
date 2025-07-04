@@ -1,5 +1,4 @@
 
-
 # python
 .python-version
 .venv/
@@ -10,18 +9,21 @@ __pycache__/
 *.pyw
 *.pyz
 
-
+# issues
+.issues
 
 # data
 data/
 
+# IDE
+.cursor
+.vscode
 *.code-workspace
 
-.issues
+
+# Claude Code
 .claude
-.vscode
+CLAUDE.md
 
 
-Plan.md
-
-
+saved/*

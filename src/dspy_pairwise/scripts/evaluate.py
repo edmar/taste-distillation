@@ -17,33 +17,44 @@ os.environ['DSPY_CACHEDIR'] = '/tmp/dspy_cache_disable'
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from dspy_pairwise import PairwiseComparisonModule
 
+# Add shared utilities
+sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'shared'))
+from logging_utils import tee_output
+
 def accuracy_metric(example, pred, trace=None):
     """Simple accuracy metric for DSPy pairwise evaluation"""
     return example.preferred_title == pred.preferred_title
 
-def evaluate_model(test_size: int = None, model_path: str = 'saved/models/reader_pairwise', num_threads: int = 16, dataset_path: str = None):
+def evaluate_model(test_size: int = None, model_path: str = 'saved/models/reader_pairwise', num_threads: int = 16, dataset_path: str = None, show_progress: bool = True):
     """Simple evaluation of DSPy pairwise classifier"""
     
-    print("="*50)
-    print("DSPy PAIRWISE CLASSIFIER EVALUATION")
-    print("="*50)
+    # Extract model name for logging
+    model_name = os.path.basename(model_path).replace('.json', '')
+    
+    with tee_output(model_name, 'eval', show_progress):
+        print("="*50)
+        print("DSPy PAIRWISE CLASSIFIER EVALUATION")
+        print("="*50)
+        
+        return _evaluate_model_impl(test_size, model_path, num_threads, dataset_path)
+
+def _evaluate_model_impl(test_size: int = None, model_path: str = 'saved/models/reader_pairwise', num_threads: int = 16, dataset_path: str = None):
+    """Implementation of evaluation logic"""
     
     # Load test data
     if dataset_path is None:
-        csv_path = "data/processed/reader_pairwise/test/dspy_examples.json"
-    else:
-        csv_path = dataset_path
+        dataset_path = "data/processed/reader_favorite_pairwise/test/dspy_examples.json"
     
-    if not os.path.exists(csv_path):
-        print(f"❌ Test data not found at: {csv_path}")
+    if not os.path.exists(dataset_path):
+        print(f"❌ Test data not found at: {dataset_path}")
         if dataset_path is None:
             print("Please run prepare.py first to create test data")
         return None
     
-    print(f"📂 Loading dataset from: {csv_path}")
+    print(f"📂 Loading dataset from: {dataset_path}")
     
     # Load JSON test data
-    with open(csv_path, 'r') as f:
+    with open(dataset_path, 'r') as f:
         test_data = json.load(f)
     
     # Sample test examples (use all if test_size is None or large enough)
@@ -59,7 +70,7 @@ def evaluate_model(test_size: int = None, model_path: str = 'saved/models/reader
         example = dspy.Example(
             title_a=item['title_a'],
             title_b=item['title_b'],
-            preferred_title=item['preference'],
+            preferred_title=item['preferred_title'],
             confidence=item['confidence']
         ).with_inputs('title_a', 'title_b')
         test_examples.append(example)
@@ -120,101 +131,6 @@ def evaluate_model(test_size: int = None, model_path: str = 'saved/models/reader
     return accuracy
 
 
-def detailed_evaluation(test_size: int = None, model_path: str = 'saved/models/dspy_pairwise', dataset_path: str = None):
-    """More detailed evaluation with confidence breakdown"""
-    
-    print("\n" + "="*50)
-    print("DETAILED PAIRWISE EVALUATION")
-    print("="*50)
-    
-    # Load test data
-    if dataset_path is None:
-        csv_path = "data/processed/reader_pairwise/test/dspy_examples.json"
-    else:
-        csv_path = dataset_path
-    
-    if not os.path.exists(csv_path):
-        print(f"❌ Test data not found at: {csv_path}")
-        return None
-    
-    print(f"📂 Loading dataset from: {csv_path}")
-    
-    with open(csv_path, 'r') as f:
-        test_data = json.load(f)
-    
-    if test_size is not None and test_size < len(test_data):
-        test_data = test_data[:test_size]
-    
-    # Load rubric
-    rubric_path = "saved/rubrics/personal_taste_rubric.txt"
-    rubric = None
-    if os.path.exists(rubric_path):
-        with open(rubric_path, 'r') as f:
-            rubric = f.read()
-    
-    # Configure DSPy
-    dspy.configure(lm=dspy.LM("openai/gpt-4.1", cache=False), cache=False)
-    
-    # Initialize and load model
-    module = PairwiseComparisonModule(use_reasoning=True, rubric=rubric)
-    
-    json_path = f"{model_path}.json" if not model_path.endswith('.json') else model_path
-    if os.path.exists(json_path):
-        module.load(json_path)
-        print(f"✅ Loaded trained model from: {json_path}")
-    else:
-        print(f"📊 Running baseline evaluation with untrained model")
-    
-    # Manual evaluation for detailed analysis
-    correct = 0
-    total = len(test_data)
-    
-    confidence_breakdown = {'high': {'correct': 0, 'total': 0}, 
-                           'medium': {'correct': 0, 'total': 0}, 
-                           'low': {'correct': 0, 'total': 0}}
-    
-    print(f"\nEvaluating {total} test pairs...")
-    
-    for i, item in enumerate(test_data):
-        # Get prediction
-        try:
-            result = module(title_a=item['title_a'], title_b=item['title_b'])
-            predicted = result.preferred_title
-        except Exception as e:
-            print(f"Error on example {i}: {e}")
-            predicted = 'A'  # Default fallback
-        
-        # Check correctness
-        is_correct = predicted == item['preference']
-        if is_correct:
-            correct += 1
-        
-        # Track by confidence
-        gt_confidence = item['confidence']
-        confidence_breakdown[gt_confidence]['total'] += 1
-        if is_correct:
-            confidence_breakdown[gt_confidence]['correct'] += 1
-    
-    # Calculate metrics
-    overall_accuracy = correct / total
-    
-    print(f"\n" + "="*40)
-    print("DETAILED RESULTS")
-    print("="*40)
-    print(f"Overall Accuracy: {overall_accuracy:.3f} ({correct}/{total})")
-    
-    print(f"\nBy Ground Truth Confidence:")
-    for conf in ['high', 'medium', 'low']:
-        data = confidence_breakdown[conf]
-        if data['total'] > 0:
-            acc = data['correct'] / data['total']
-            print(f"  {conf.capitalize()}: {acc:.3f} ({data['correct']}/{data['total']})")
-        else:
-            print(f"  {conf.capitalize()}: No examples")
-    
-    return overall_accuracy
-
-
 if __name__ == "__main__":
     import argparse
     
@@ -267,23 +183,22 @@ Examples:
         help='Run detailed evaluation with confidence breakdown'
     )
     
+    parser.add_argument(
+        '--no-progress',
+        action='store_true',
+        help='Hide progress bars on console'
+    )
+    
     # Parse arguments
     args = parser.parse_args()
     
-    # Run evaluation
-    if args.detailed:
-        accuracy = detailed_evaluation(
-            test_size=args.test_size,
-            model_path=args.model,
-            dataset_path=args.dataset
-        )
-    else:
-        accuracy = evaluate_model(
-            test_size=args.test_size,
-            model_path=args.model,
-            num_threads=args.threads,
-            dataset_path=args.dataset
-        )
+    accuracy = evaluate_model(
+        test_size=args.test_size,
+        model_path=args.model,
+        num_threads=args.threads,
+        dataset_path=args.dataset,
+        show_progress=not args.no_progress
+    )
     
     if accuracy is not None:
         print(f"\n✅ Evaluation completed! Accuracy: {accuracy:.3f}")

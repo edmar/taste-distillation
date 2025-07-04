@@ -18,12 +18,45 @@ os.environ['DSPY_CACHEDIR'] = '/tmp/dspy_cache_disable'
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from dspy_pairwise import PairwiseComparisonModule
 
+# Add shared utilities
+sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'shared'))
+from logging_utils import tee_output
+
 def accuracy_metric(example, pred, trace=None):
     """Simple accuracy metric for DSPy training"""
     return example.preferred_title == pred.preferred_title
 
 def train_model(
-    data_path: str = "data/processed/reader_pairwise",
+    data_path: str = "data/processed/reader_favorite_pairwise",
+    model_name: str = "openai/gpt-4.1",
+    optimizer_type: str = "mipro",
+    max_train_examples: int = None,
+    max_bootstrapped_demos: int = 4,
+    max_labeled_demos: int = 4,
+    num_threads: int = 16,
+    auto_level: str = "light",
+    save_path: str = "saved/models/dspy_pairwise",
+    train_dataset_path: str = None,
+    show_progress: bool = True
+):
+    """Train the DSPy pairwise classifier"""
+    
+    # Extract model name for logging
+    model_name_for_log = os.path.basename(save_path)
+    
+    with tee_output(model_name_for_log, 'train', show_progress):
+        print("="*50)
+        print("DSPy PAIRWISE CLASSIFIER TRAINING")
+        print("="*50)
+        print(f"Model: {model_name} | Optimizer: {optimizer_type} | Examples: {max_train_examples or 'all'}")
+        
+        return _train_model_impl(
+            data_path, model_name, optimizer_type, max_train_examples,
+            max_bootstrapped_demos, max_labeled_demos, num_threads, auto_level, save_path, train_dataset_path
+        )
+
+def _train_model_impl(
+    data_path: str = "data/processed/reader_favorite_pairwise",
     model_name: str = "openai/gpt-4.1",
     optimizer_type: str = "mipro",
     max_train_examples: int = None,
@@ -34,12 +67,7 @@ def train_model(
     save_path: str = "saved/models/dspy_pairwise",
     train_dataset_path: str = None,
 ):
-    """Train the DSPy pairwise classifier"""
-    
-    print("="*50)
-    print("DSPy PAIRWISE CLASSIFIER TRAINING")
-    print("="*50)
-    print(f"Model: {model_name} | Optimizer: {optimizer_type} | Examples: {max_train_examples or 'all'}")
+    """Implementation of training logic"""
     
     # Load training data
     if train_dataset_path is not None:
@@ -68,7 +96,7 @@ def train_model(
         example = dspy.Example(
             title_a=item['title_a'],
             title_b=item['title_b'],
-            preferred_title=item['preference'],
+            preferred_title=item['preferred_title'],
             confidence=item['confidence']
         ).with_inputs('title_a', 'title_b')
         trainset.append(example)
@@ -108,7 +136,6 @@ def train_model(
         compile_kwargs = {
             "max_bootstrapped_demos": max_bootstrapped_demos,
             "max_labeled_demos": max_labeled_demos,
-            "requires_permission_to_run": False
         }
     elif optimizer_type.lower() == "bootstrap":
         teleprompter = dspy.BootstrapFewShot(
@@ -119,7 +146,6 @@ def train_model(
             max_errors=10
         )
         compile_kwargs = {
-            "requires_permission_to_run": False
         }
     else:
         print(f"❌ Unknown optimizer type: {optimizer_type}")
@@ -187,6 +213,7 @@ if __name__ == "__main__":
     parser.add_argument('--threads', type=int, help='Number of parallel threads')
     parser.add_argument('--model', help='Language model to use')
     parser.add_argument('--train-data', '--dataset', dest='train_data', help='Path to training dataset file')
+    parser.add_argument('--no-progress', action='store_true', help='Hide progress bars on console')
     
     args = parser.parse_args()
     
@@ -197,7 +224,8 @@ if __name__ == "__main__":
         'auto_level': args.auto_level,
         'num_threads': args.threads,
         'model_name': args.model,
-        'train_dataset_path': args.train_data
+        'train_dataset_path': args.train_data,
+        'show_progress': not args.no_progress
     }.items() if v is not None}
     
     success = train_model(**kwargs)

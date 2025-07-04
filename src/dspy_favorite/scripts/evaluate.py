@@ -5,8 +5,9 @@ Simple evaluation script for DSPy favorite classifier
 
 import os
 import sys
-import pandas as pd
+import json
 import dspy
+import argparse
 from dspy.evaluate import Evaluate
 
 # Disable DSPy caching to avoid database conflicts in parallel evaluation
@@ -16,154 +17,124 @@ os.environ['DSPY_CACHEDIR'] = '/tmp/dspy_cache_disable'
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from dspy_favorite import TastePredictionModule
 
+# Add shared utilities
+sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'shared'))
+from logging_utils import tee_output
+from config import get_config
+
+
 def accuracy_metric(example, pred, trace=None):
     """Simple accuracy metric for DSPy evaluation"""
     return example.is_favorite == pred.is_favorite
 
-def evaluate_model(test_size: int = None, model_path: str = 'saved/models/dspy_favorite', num_threads: int = 16):
-    """Simple evaluation of DSPy favorite classifier"""
+
+def evaluate_model(args):
+    """Evaluate DSPy favorite classifier"""
     
-    print("="*50)
-    print("DSPy FAVORITE CLASSIFIER EVALUATION")
-    print("="*50)
+    # Load configuration
+    config = get_config("evaluate")
+    eval_config = config.get_evaluation_config()
+    paths_config = config.get_paths_config()
     
-    # Load test data
-    csv_path = "data/processed/reader_favorite/test/favorite_classifier.csv"
-    if not os.path.exists(csv_path):
-        print(f"❌ Test data not found at: {csv_path}")
-        print("Please run prepare.py first to create test data")
-        return None
+    # Set defaults from config
+    dataset_path = args.dataset or paths_config.get('default_dataset')
+    model_path = args.model or paths_config.get('default_model')
+    num_threads = args.threads or eval_config.get('num_threads', 16)
+    llm_name = config.get_llm_name(args.llm)
     
-    df = pd.read_csv(csv_path)
+    # Extract model name for logging
+    log_name = os.path.basename(model_path).replace('.json', '') if model_path else 'dspy_favorite'
     
-    # Sample test examples (use all if test_size is None or large enough)
-    if test_size is None or test_size >= len(df):
-        print(f"Evaluating on full test set: {len(df)} examples")
-    else:
-        df = df.sample(n=test_size, random_state=42)
-        print(f"Evaluating on {len(df)} test examples (sampled from {len(pd.read_csv(csv_path))})")
-    
-    # Convert to DSPy format
-    test_examples = []
-    for _, row in df.iterrows():
-        example = dspy.Example(
-            title=row['Title'],
-            is_favorite=row['has_favorite']
-        ).with_inputs('title')
-        test_examples.append(example)
-    
-    # Load rubric
-    rubric_path = "saved/rubrics/personal_taste_rubric.txt"
-    rubric = None
-    if os.path.exists(rubric_path):
-        with open(rubric_path, 'r') as f:
-            rubric = f.read()
-        print("✅ Loaded taste rubric")
-    
-    # Configure DSPy with cache disabled  
-    dspy.configure(lm=dspy.LM("openai/gpt-4o", cache=False), cache=False)
-    
-    # Initialize module
-    module = TastePredictionModule(use_reasoning=True, rubric=rubric)
-    
-    # Load trained model if available
-    # Handle both .json and non-.json paths
-    if model_path.endswith('.json'):
-        json_path = model_path
-        base_path = model_path[:-5]  # Remove .json extension
-    else:
-        json_path = f"{model_path}.json"
-        base_path = model_path
-    
-    if os.path.exists(json_path):
-        module.load(json_path)
-        print(f"✅ Loaded trained model from: {json_path}")
-    else:
-        print(f"📊 Running baseline evaluation with untrained model")
-    
-    # Run evaluation with configurable threading
-    try:
-        evaluator = Evaluate(
-            devset=test_examples,
-            num_threads=num_threads,
-            display_progress=True,
-            max_errors=10  # Allow some errors without failing
-        )
+    with tee_output(log_name, 'eval', not args.no_progress):
+        print("="*50)
+        print("DSPy FAVORITE CLASSIFIER EVALUATION")
+        print("="*50)
+        print(f"📂 Dataset: {dataset_path}")
         
-        accuracy = evaluator(module, metric=accuracy_metric)
-    except Exception as e:
-        print(f"❌ Parallel evaluation failed: {e}")
-        print("🔄 Falling back to single-threaded evaluation...")
+        # Load test data
+        if not os.path.exists(dataset_path):
+            print(f"❌ Test data not found at: {dataset_path}")
+            return None
         
-        # Fallback to single-threaded evaluation
-        evaluator = Evaluate(
-            devset=test_examples,
-            num_threads=1,
-            display_progress=True
-        )
+        with open(dataset_path, 'r') as f:
+            data = json.load(f)
         
-        accuracy = evaluator(module, metric=accuracy_metric)
-    
-    print(f"\n🎯 Accuracy: {accuracy:.3f}")
-    return accuracy
-
-
-if __name__ == "__main__":
-    import sys
-    
-    # Check for help flag
-    if '--help' in sys.argv or '-h' in sys.argv:
-        print("""
-DSPy Favorite Classifier Evaluation Script
-
-Usage: python evaluate.py [OPTIONS]
-
-Options:
-  <number>           Number of test examples to evaluate (default: all)
-  --model=PATH       Path to trained model (default: saved/models/dspy_favorite)
-  --model PATH       Path to trained model (alternative format)
-  --threads=N        Number of parallel threads (default: 16)
-  -h, --help         Show this help message
-
-Examples:
-  python evaluate.py                                      # Evaluate all test examples
-  python evaluate.py 200                                 # Evaluate 200 examples  
-  python evaluate.py --model=my_model                    # Use custom model path
-  python evaluate.py --model saved/models/dspy_favorite_001.json  # Use specific model
-  python evaluate.py 50 --threads=8                      # 50 examples with 8 threads
-        """)
-        sys.exit(0)
-    
-    # Parse command line arguments
-    test_size = None  # Default: use all test examples
-    model_path = 'saved/models/dspy_favorite'
-    num_threads = 16
-    
-    i = 1
-    while i < len(sys.argv):
-        arg = sys.argv[i]
-        if arg.lower() == 'all':
-            test_size = None  # Use all examples
-        elif arg.startswith('--model='):
-            model_path = arg.split('=')[1]
-        elif arg == '--model' and i + 1 < len(sys.argv):
-            # Support --model PATH format
-            model_path = sys.argv[i + 1]
-            i += 1  # Skip the next argument
-        elif arg.startswith('--threads='):
-            num_threads = int(arg.split('=')[1])
+        # Sample if requested
+        if args.test_size and args.test_size < len(data):
+            import random
+            random.seed(42)
+            data = random.sample(data, args.test_size)
+            print(f"Evaluating on {len(data)} test examples (sampled)")
         else:
-            try:
-                test_size = int(arg)
-            except ValueError:
-                print(f"Warning: Ignoring unrecognized argument: {arg}")
-        i += 1
+            print(f"Evaluating on full test set: {len(data)} examples")
+        
+        # Convert to DSPy format
+        label_field = 'is_favorite' if 'is_favorite' in data[0] else 'is_shortlist'
+        test_examples = [
+            dspy.Example(title=item['title'], is_favorite=item[label_field]).with_inputs('title')
+            for item in data
+        ]
+        
+        # Load rubric
+        rubric_path = paths_config.get('rubric')
+        rubric = None
+        if rubric_path and os.path.exists(rubric_path):
+            with open(rubric_path, 'r') as f:
+                rubric = f.read()
+            print("✅ Loaded taste rubric")
+        
+        # Configure DSPy
+        llm_config = config.get_llm_config(args.llm)
+        cache_enabled = llm_config.get('cache', False)
+        print(f"🤖 Using LLM: {llm_name}")
+        
+        # Build LM parameters with any special requirements
+        lm_params = {'cache': cache_enabled}
+        if 'temperature' in llm_config:
+            lm_params['temperature'] = llm_config['temperature']
+        if 'max_tokens' in llm_config:
+            lm_params['max_tokens'] = llm_config['max_tokens']
+            
+        dspy.configure(lm=dspy.LM(llm_name, **lm_params), cache=cache_enabled)
+        
+        # Initialize module
+        module = TastePredictionModule(use_reasoning=True, rubric=rubric)
+        
+        # Load trained model if available
+        model_json_path = model_path if model_path.endswith('.json') else f"{model_path}.json"
+        if os.path.exists(model_json_path):
+            module.load(model_json_path)
+            print(f"✅ Loaded trained model from: {model_json_path}")
+        else:
+            print(f"📊 Running baseline evaluation with untrained model")
+        
+        # Run evaluation
+        evaluator = Evaluate(devset=test_examples, num_threads=num_threads, display_progress=True)
+        accuracy = evaluator(module, metric=accuracy_metric)
+        
+        print(f"\n🎯 Accuracy: {accuracy:.3f}")
+        return accuracy
+
+
+def main():
+    parser = argparse.ArgumentParser(description='DSPy Favorite Classifier Evaluation')
+    parser.add_argument('test_size', nargs='?', type=int, help='Number of test examples (default: all)')
+    parser.add_argument('--dataset', help='Path to test dataset JSON file')
+    parser.add_argument('--model', help='Path to trained model')
+    parser.add_argument('--llm', help='LLM model to use')
+    parser.add_argument('--threads', type=int, help='Number of parallel threads')
+    parser.add_argument('--no-progress', action='store_true', help='Hide progress bars')
     
-    # Run evaluation
-    accuracy = evaluate_model(test_size=test_size, model_path=model_path, num_threads=num_threads)
+    args = parser.parse_args()
+    
+    accuracy = evaluate_model(args)
     
     if accuracy is not None:
         print(f"\n✅ Evaluation completed! Accuracy: {accuracy:.3f}")
     else:
         print(f"\n❌ Evaluation failed!")
         sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()
