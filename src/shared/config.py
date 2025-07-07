@@ -91,6 +91,13 @@ class Config:
             llm_configs = self._get_llm_configs()
             if llm_override in llm_configs:
                 return llm_configs[llm_override]
+            
+            # Check if this is a full OpenAI model name (e.g., "openai/o3")
+            # and try to match with a named config
+            if llm_override.startswith('openai/'):
+                model_suffix = llm_override[7:]  # Remove "openai/" prefix
+                if model_suffix in llm_configs:
+                    return llm_configs[model_suffix]
         return self._config.get('llm', {})
     
     def _get_llm_configs(self) -> Dict[str, Any]:

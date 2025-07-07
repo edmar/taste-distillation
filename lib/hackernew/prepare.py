@@ -445,7 +445,7 @@ def main():
     parser = argparse.ArgumentParser(description="Prepare HN data for ML training (both pairwise and favorite formats)")
     parser.add_argument('--data', type=str, required=True,
                         help='Path to HN dataset CSV file')
-    parser.add_argument('--output-base', type=str, default='data/processed',
+    parser.add_argument('--output-base', type=str, default='data',
                         help='Base output directory (will create hn_pairwise and hn_favorite subdirs)')
     parser.add_argument('--max-pairs', type=int, default=5000,
                         help='Maximum number of pairwise examples to generate')

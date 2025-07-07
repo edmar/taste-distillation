@@ -78,10 +78,12 @@ def evaluate_model(args):
         # Load rubric
         rubric_path = paths_config.get('rubric')
         rubric = None
-        if rubric_path and os.path.exists(rubric_path):
+        if not args.no_rubric and rubric_path and os.path.exists(rubric_path):
             with open(rubric_path, 'r') as f:
                 rubric = f.read()
             print("✅ Loaded taste rubric")
+        elif args.no_rubric:
+            print("🚫 Skipping rubric (--no-rubric flag)")
         
         # Configure DSPy
         llm_config = config.get_llm_config(args.llm)
@@ -124,6 +126,7 @@ def main():
     parser.add_argument('--llm', help='LLM model to use')
     parser.add_argument('--threads', type=int, help='Number of parallel threads')
     parser.add_argument('--no-progress', action='store_true', help='Hide progress bars')
+    parser.add_argument('--no-rubric', action='store_true', help='Skip loading the taste rubric')
     
     args = parser.parse_args()
     

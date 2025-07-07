@@ -23,7 +23,7 @@ from reader.favorite import prepare_favorite_data, FAVORITE_CONFIG
 from reader.shortlist import prepare_shortlist_data, SHORTLIST_CONFIG
 
 
-def prepare_classification_dataset(df, config, output_base_dir, csv_path, seed=42):
+def prepare_classification_dataset(df, config, output_base_dir, csv_path, days_override=None, seed=42):
     """Prepare a single classification dataset (favorite or shortlist)."""
     
     # Apply task-specific preparation
@@ -32,9 +32,10 @@ def prepare_classification_dataset(df, config, output_base_dir, csv_path, seed=4
     else:  # shortlist
         df = prepare_shortlist_data(df)
     
-    # Apply date filter if specified
-    if config['days_filter']:
-        df = filter_by_date(df, config['days_filter'])
+    # Apply date filter if specified (use override if provided)
+    days_filter = days_override if days_override is not None else config['days_filter']
+    if days_filter:
+        df = filter_by_date(df, days_filter)
     
     # Apply location filter if specified
     if config['excluded_locations']:
@@ -55,12 +56,12 @@ def prepare_classification_dataset(df, config, output_base_dir, csv_path, seed=4
     save_classification_splits(splits, output_dir, config['label_column'], config['dataset_name'])
     
     # Create summary
-    days_desc = f" (last {config['days_filter']} days)" if config['days_filter'] else ""
+    days_desc = f" (last {days_filter} days)" if days_filter else ""
     description = config['task_description'] + days_desc
     
     summary = create_classification_summary(
         splits, output_dir, csv_path, config['label_column'],
-        config['task_name'], description, config['days_filter']
+        config['task_name'], description, days_filter
     )
     
     # Print statistics
@@ -151,8 +152,10 @@ def main():
     parser = argparse.ArgumentParser(description="Prepare all Readwise Reader datasets")
     parser.add_argument('--data', type=str, required=True,
                         help='Path to Readwise Reader export CSV file')
-    parser.add_argument('--output', type=str, default='data/processed',
+    parser.add_argument('--output', type=str, default='data',
                         help='Output directory for processed data')
+    parser.add_argument('--days', type=int, default=None,
+                        help='Number of days to include (default: None for favorite, 90 for shortlist)')
     parser.add_argument('--max-pairs', type=int, default=2000,
                         help='Maximum number of pairwise comparisons per dataset')
     parser.add_argument('--seed', type=int, default=42,
@@ -199,7 +202,7 @@ def main():
         
         # Prepare classification dataset
         splits = prepare_classification_dataset(
-            df_all.copy(), config, output_base_dir, str(csv_path), args.seed
+            df_all.copy(), config, output_base_dir, str(csv_path), args.days, args.seed
         )
         
         # Prepare pairwise dataset

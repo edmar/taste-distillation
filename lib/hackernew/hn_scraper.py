@@ -46,11 +46,11 @@ class HNScraper:
     """Complete HN scraper in one class."""
     
     def __init__(self, username: str, password: str, 
-                 max_upvoted_pages: int = 20,
+                 max_front_pages: int = 10,
                  headless: bool = True):
         self.username = username
         self.password = password
-        self.max_upvoted_pages = max_upvoted_pages
+        self.max_front_pages = max_front_pages
         self.headless = headless
         self.is_authenticated = False
         
@@ -90,7 +90,7 @@ class HNScraper:
             return False
     
     async def extract_posts_from_page(self, page) -> List[PostData]:
-        """Extract posts from current page."""
+        """Extract posts from current page and detect vote status."""
         posts = []
         
         try:
@@ -110,16 +110,34 @@ class HNScraper:
                     title = await title_elem.text_content()
                     url = await title_elem.get_attribute('href') or ''
                     
+                    # Check if user has voted on this post
+                    # Look for the next sibling row which contains vote controls
+                    next_row = await page.query_selector(f'#\{story_id} + tr')
+                    your_vote = 0
+                    source = 'non_voted'
+                    
+                    if next_row:
+                        # Check for upvote button state - if it's already voted, the class changes
+                        upvote_elem = await next_row.query_selector('.votelinks .votearrow')
+                        if upvote_elem:
+                            upvote_class = await upvote_elem.get_attribute('class') or ''
+                            # If user has voted, the upvote arrow usually has 'nosee' class or similar
+                            # Or check for the presence of an 'unvote' link
+                            unvote_elem = await next_row.query_selector('a[id^="un_"]')
+                            if unvote_elem or 'nosee' in upvote_class:
+                                your_vote = 1
+                                source = 'upvoted'
+                    
                     posts.append(PostData(
                         id=story_id,
                         title=title.strip(),
                         url=url,
-                        source='',  # Will be set by caller
-                        your_vote=1
+                        source=source,
+                        your_vote=your_vote
                     ))
                     
                 except Exception as e:
-                    logger.debug(f"Error parsing row: {e}")
+                    logger.debug(f"Error parsing row {story_id}: {e}")
                     continue
         
         except Exception as e:
@@ -128,58 +146,15 @@ class HNScraper:
         return posts
     
     
-    async def extract_upvoted(self, context) -> List[PostData]:
-        """Extract upvoted posts."""
-        logger.info("Extracting upvoted posts...")
-        all_upvoted = []
-        
-        for page_num in range(1, self.max_upvoted_pages + 1):
-            try:
-                page = await context.new_page()
-                url = f"https://news.ycombinator.com/upvoted?id={self.username}&p={page_num}"
-                await page.goto(url, timeout=30000)
-                
-                # Check auth
-                if 'login' in page.url:
-                    logger.warning(f"Re-auth needed for upvoted page {page_num}")
-                    if not await self.authenticate(page):
-                        await page.close()
-                        break
-                    await page.goto(url, timeout=30000)
-                
-                posts = await self.extract_posts_from_page(page)
-                
-                for post in posts:
-                    post.source = 'upvoted'
-                    post.your_vote = 1
-                
-                all_upvoted.extend(posts)
-                logger.info(f"Upvoted page {page_num}: {len(posts)} posts")
-                
-                if not posts:
-                    await page.close()
-                    break
-                
-                await page.close()
-                await asyncio.sleep(1)  # Rate limit
-                
-            except Exception as e:
-                logger.error(f"Error on upvoted page {page_num}: {e}")
-                if 'page' in locals():
-                    await page.close()
-                continue
-        
-        logger.info(f"Total upvoted: {len(all_upvoted)}")
-        return all_upvoted
     
-    async def get_recent_posts_with_vote_status(self, context, upvoted_ids: set) -> List[PostData]:
-        """Get recent posts from HN front page and check if user voted on them."""
-        logger.info("Getting recent posts from front page and checking vote status...")
+    async def get_front_page_posts(self, context) -> List[PostData]:
+        """Get posts from HN front pages and detect vote status."""
+        logger.info(f"Getting posts from front pages 1-{self.max_front_pages}...")
         
         all_posts = []
         
-        # Get multiple pages from front page (1-10)
-        for page_num in range(1, 11):  # Pages 1-10
+        # Get multiple pages from front page
+        for page_num in range(1, self.max_front_pages + 1):
             try:
                 page = await context.new_page()
                 if page_num == 1:
@@ -189,18 +164,10 @@ class HNScraper:
                 await page.goto(url, timeout=30000)
                 
                 posts = await self.extract_posts_from_page(page)
+                all_posts.extend(posts)
                 
-                for post in posts:
-                    if post.id in upvoted_ids:
-                        post.source = 'upvoted'
-                        post.your_vote = 1
-                    else:
-                        post.source = 'non_voted'
-                        post.your_vote = 0
-                    
-                    all_posts.append(post)
-                
-                logger.info(f"Got {len(posts)} posts from front page {page_num}")
+                voted_count = sum(1 for p in posts if p.your_vote == 1)
+                logger.info(f"Front page {page_num}: {len(posts)} posts ({voted_count} voted, {len(posts) - voted_count} not voted)")
                 
                 await page.close()
                 await asyncio.sleep(1)
@@ -220,7 +187,7 @@ class HNScraper:
                 unique_posts.append(post)
         
         voted_count = sum(1 for p in unique_posts if p.your_vote == 1)
-        logger.info(f"Total recent posts: {len(unique_posts)} ({voted_count} voted, {len(unique_posts) - voted_count} not voted)")
+        logger.info(f"Total front page posts: {len(unique_posts)} ({voted_count} voted, {len(unique_posts) - voted_count} not voted)")
         
         return unique_posts
     
@@ -291,8 +258,8 @@ class HNScraper:
         return posts
     
     async def create_dataset(self) -> pd.DataFrame:
-        """Create complete dataset."""
-        logger.info("Creating HN dataset...")
+        """Create complete dataset from front pages only."""
+        logger.info("Creating HN dataset from front pages...")
         
         async with async_playwright() as p:
             browser = await p.chromium.launch(headless=self.headless)
@@ -305,32 +272,8 @@ class HNScraper:
                 if not await self.authenticate(main_page):
                     raise Exception("Authentication failed")
                 
-                # Extract upvoted posts to know what user voted on
-                upvoted = await self.extract_upvoted(context)
-                
-                # Create set of upvoted IDs for quick lookup
-                upvoted_ids = {post.id for post in upvoted}
-                logger.info(f"Found {len(upvoted_ids)} upvoted posts")
-                
-                # Get recent posts and check vote status
-                recent_posts = await self.get_recent_posts_with_vote_status(context, upvoted_ids)
-                
-                # Combine upvoted posts (from history) with recent posts
-                # This ensures we have all upvoted posts plus recent activity
-                all_posts = []
-                seen_ids = set()
-                
-                # Add all upvoted posts first
-                for post in upvoted:
-                    if post.id not in seen_ids:
-                        all_posts.append(post)
-                        seen_ids.add(post.id)
-                
-                # Add recent posts (both voted and non-voted)
-                for post in recent_posts:
-                    if post.id not in seen_ids:
-                        all_posts.append(post)
-                        seen_ids.add(post.id)
+                # Get all posts from front pages with vote status
+                all_posts = await self.get_front_page_posts(context)
                 
                 # Count statistics
                 voted_count = sum(1 for p in all_posts if p.your_vote == 1)
@@ -362,20 +305,20 @@ async def main():
     
     # Get configuration
     print("\nDataset size:")
-    print("1. Small (10 upvoted pages + recent posts) ~5 min")
-    print("2. Medium (20 upvoted pages + recent posts) ~10 min")
-    print("3. Large (40 upvoted pages + recent posts) ~20 min")
+    print("1. Small (5 front pages) ~2 min")
+    print("2. Medium (10 front pages) ~5 min")
+    print("3. Large (20 front pages) ~10 min")
     
     choice = input("Choose (1-3): ").strip()
     
     if choice == "1":
-        max_up = 10
+        max_pages = 5
         size_name = "small"
     elif choice == "3":
-        max_up = 40
+        max_pages = 20
         size_name = "large"
     else:
-        max_up = 20
+        max_pages = 10
         size_name = "medium"
     
     # Create output path
@@ -387,8 +330,7 @@ async def main():
     output_file = data_dir / f"hn_export_{username}_{size_name}_{timestamp}.csv"
     
     print(f"\nConfiguration:")
-    print(f"  Upvoted pages: {max_up}")
-    print(f"  Recent pages: Front page (10 pages)")
+    print(f"  Front pages: {max_pages}")
     print(f"  Output: {output_file}")
     
     if input("\nProceed? (y/N): ").lower() != 'y':
@@ -400,7 +342,7 @@ async def main():
         scraper = HNScraper(
             username=username,
             password=password,
-            max_upvoted_pages=max_up,
+            max_front_pages=max_pages,
             headless=choice != "1"  # Keep visible for small datasets
         )
         

@@ -6,6 +6,7 @@ default:
   # LLM settings
   llm:
     model_name: "openai/gpt-4o-mini"
+    temperature: 0.0
     cache: false
     
   # Training parameters
@@ -42,10 +43,17 @@ llms:
   # Standard models
   gpt4o_mini:
     model_name: "openai/gpt-4o-mini"
+    temperature: 0.0
     cache: false
     
   gpt4o:
     model_name: "openai/gpt-4o"
+    temperature: 0.0
+    cache: false
+    
+  gpt41_mini:
+    model_name: "openai/gpt-4.1-mini"
+    temperature: 0.0
     cache: false
 
 # Optimizer-specific configurations
